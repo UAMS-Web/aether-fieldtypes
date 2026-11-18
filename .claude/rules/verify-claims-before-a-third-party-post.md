@@ -1,0 +1,59 @@
+<!--
+  Synced from UAMS-Web/uams-claude-skills: shared/.claude/rules/verify-claims-before-a-third-party-post.md
+  Edit it there, not here; the next sync overwrites this copy.
+  Delivered to this repository through the profile(s): core.
+-->
+# Rule — verify every claim three independent ways before a post to a third-party tracker
+
+**Before the operator is asked to approve a post to a tracker the organization does not own, check every claim in the draft three times, each by a different method, and record the claims and the checks on the originating ticket.** The post is an issue, a pull request, or a comment on either, on a repository outside the organization: a defect report against a dependency filed under [`filing-defects-across-repos`](filing-defects-across-repos.md), an upstream issue or pull request in a patch chain, a feature or documentation request.
+
+## Why this is a standing order
+
+**An upstream post cannot be corrected the way an internal artifact can.** It lands on a public tracker under a maintainer's identity, and the maintainer acts on it: reproducing it, prioritizing it, merging a fix. A wrong version, line number or reproduction output costs their time and the report's credibility, and an edit afterwards does not reach anyone who already read the original.
+
+**The draft is built from the author's own instruments**, the case [`adversarial-review`](adversarial-review.md) and [`an-empty-result-is-not-evidence`](an-empty-result-is-not-evidence.md) are written against: the probe and the material share an author, so a second pass by the same method reproduces the same blind spot. Hence the independence requirement, not just a count.
+
+## How to apply
+
+1. **Write the post in the target's own template.** Before drafting an issue or pull request, read the target repository's `.github/ISSUE_TEMPLATE/` (every form or Markdown file in it, and `config.yml`, which can turn blank issues off) and its pull request template. GitHub reads a single pull request template from the repository root, from `docs/` or from `.github/`, under a file name that is not case sensitive and may end in `.md` or `.txt` (`pull_request_template.md`, `PULL_REQUEST_TEMPLATE.md`); where more than one of those holds one, the `.github` folder wins, then the root, then `docs/`. It reads several templates from a `PULL_REQUEST_TEMPLATE/` subdirectory inside any of those three folders, and a template there is chosen with the `template` query parameter, so a target with that directory has one template per kind of change: read every file in it and write the post in the one that matches the change. A search for `.github/PULL_REQUEST_TEMPLATE.md` alone reports no template for a target that keeps it in `docs/`, under another casing or as a `.txt` file, and the post then goes out free-form. GitHub reads issue templates only from `.github/ISSUE_TEMPLATE/` (a `.md` file for a Markdown template, a `.yml` file for an issue form); its documentation names no other location, so that list needs no further paths. Where the target has none of them, read the same paths in the organization's `.github` repository, which GitHub applies as the default. Then write the post in the template's own sections and order, using its title conventions (a version prefix, a target branch). A maintainer triages against those fields, and a free-form post is the shape the project asked not to receive.
+   - **A field that cannot be filled honestly is answered by saying so**, never by inventing content: a `support:details` dump from a reproduction that ran in a test suite and not on a site reads "not applicable: reproduced in a test suite, not on a site", with the actual environment stated beside it.
+   - **Where neither the target nor its organization has a template, the post keeps the house style**, and the draft says that none was found and where it looked.
+   - **Do this before the checks below**, so that every field the template asks for is a claim the three checks cover.
+
+2. **Check every claim.** The kinds a draft carries:
+   - versions and revision hashes, named as the tag or commit the reading came from, never the default branch;
+   - file paths and line numbers;
+   - counts (mutants, tests, occurrences);
+   - the described behavior;
+   - the reproduction steps and the output they are said to print;
+   - the proposed fix;
+   - absence claims ("no existing report", "unchanged in the latest release").
+
+3. **Use three independent methods per claim.** A repeat of one method is not a second check. Examples of methods that are independent of each other:
+   - **Execute it.** Run the reproduction exactly as printed, in a clean directory, and compare the output with the draft character for character.
+   - **Read the source at the named revision.** Open the file at the tag or hash the draft names, and confirm the path, the line and the described behavior there.
+   - **Run a control that can give the other answer.** A negative or two-sided control that shows the check would have reported a difference: an absence search shown finding a known report, a reproduction shown passing with the fix applied.
+   - **Ask a different source.** The registry or release feed instead of the checkout, or the tracker's REST listing instead of its search.
+
+4. **Run the checks when the claims are final.** After the fix the draft describes is installed and tested, and after the last edit to the draft, so they run against what is being offered. A draft written earlier is re-verified at that point, not trusted. A change to the draft after the checks puts the touched claims back in scope.
+
+5. **Record the claims and the checks on the originating ticket before the approval is requested.** Each claim, the three methods, and each result, so the approver sees the evidence and not a bare assurance. A claim that failed any check is corrected in the draft, and the corrected claim is checked again.
+
+6. **Request the approval only after that.** Who approves is unchanged: this rule adds the evidence the approval rests on and does not move the approval.
+
+## What this does not cover
+
+- **Posts to repositories the organization owns.** Those are corrected in place, and [`adversarial-review`](adversarial-review.md) and [`pre-merge-check`](pre-merge-check.md) govern them.
+- **When the checks fall in a chain.** The lifecycle of a vendor patch belongs to the `upstream-patch-lifecycle` skill, and the point at which these checks run in its tickets to the `patch-package` skill, where a repository carries each. This rule owns the requirement and the skills own only the timing.
+
+## The DRY line
+
+This file is the standing statement of **what is verified before a third-party post, and how, and the shape it takes**. Where to file a defect and how to claim it is [`filing-defects-across-repos`](filing-defects-across-repos.md); the skeptical pass over a change or a published claim is [`adversarial-review`](adversarial-review.md); the zero-needs-a-control requirement is [`an-empty-result-is-not-evidence`](an-empty-result-is-not-evidence.md).
+
+## References
+
+The template locations in step 1 are read from GitHub's documentation (fetched 2026-11-14):
+
+- [Creating a pull request template for your repository](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository): the three folders, the `PULL_REQUEST_TEMPLATE/` subdirectory and the `template` query parameter.
+- [About issue and pull request templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates): file names that are not case sensitive, `.md` or `.txt` for a pull request template, issue templates in `.github/ISSUE_TEMPLATE`.
+- [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file): the organization `.github` repository default and the `.github`, root, `docs/` order of precedence.

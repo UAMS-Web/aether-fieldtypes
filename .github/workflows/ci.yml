@@ -1,0 +1,264 @@
+name: CI
+
+# This workflow calls the shared job chain in UAMS-Web/uams-ci-workflows and adds the jobs that
+# chain does not provide, plus the one job a ruleset requires, `CI`. The chain (Composer validate,
+# synced files, no-emoji, aggregate-needs, Pint, Rector, PHPStan, mutate-ignore, mutate, Pest) lives
+# in that repository; its checks report as `checks / <job name> (<operating system>)`. The
+# `.claude/skills/code-quality/templates/ci.yml` template in UAMS-Web/uams-claude-skills is the
+# form this file adopts (UAMS-Web/uams-claude-skills#492). The jobs below the call are this
+# repository's own: they are not in the chain, so they stay here as plain jobs.
+#
+# THE PIN. `uses:` names a release tag of the reusable workflow, never a branch, so a change to
+# the chain reaches this repository only when the tag here moves. Dependabot does not move it.
+# `mutate: false` because the template's `src/` holds no code a mutator changes: the chain's full
+# mutation pass on a push to `main` would create no mutants and fail by design (measured:
+# `composer mutate -- --min=100` prints "0 Mutations for 0 Files created", exit 1). An add-on whose
+# `src/` has code deletes that input. With the input false the chain's `Chain result` job treats
+# the skipped `mutate` job as success and still fails on any other skipped job.
+#
+# RUN_REMOTE_CI: budget kill-switch.
+# GitHub Actions minutes bill at the organization level, one pool shared by every UAMS-Web
+# repository, and only private repositories consume them. Every job below, the call included, and
+# every job in the pull-request workflows beside this one, is gated on
+# `if: vars.RUN_REMOTE_CI != 'false'`: with the variable set to `false` the jobs report `skipped`
+# and consume no runner minutes; unset, or any other value, runs them as before. A skipped job
+# reports `Success`, so a green required check while the switch is off means nothing ran, not that
+# the code passed; `composer ci` is the gate then. The add-ons generated from this repository are
+# public, where minutes are free and nobody sets the variable, so the gate does nothing there.
+# `scripts/remote-ci-gate.test.mjs` fails when a job is added without it.
+#
+# REQUIRED CHECKS. `main` requires three status checks by name, through the organization's atomic
+# rulesets selected by this repository's `required_checks` property (`ci-aggregate` and
+# `pr-body`): `CI` below, and the `Attribution footer` and `Closing keywords` jobs of the two
+# pull-request-body workflows. No other job name is required, so renaming or adding a job needs no
+# ruleset change. Do not rename `CI`. Job names must stay unique across all workflows in this
+# repository, because two jobs under one name report one check.
+#
+# THE `CI` AGGREGATE. The last job, `ci` (named `CI`), `needs:` the call and every plain job in
+# this file and fails unless each one succeeded, so a ruleset can require the one name `CI` instead
+# of every job's (UAMS-Web/uams-claude-skills#471). The call's own `Chain result` job needs every
+# job in the chain, so the call is `success` only when each of them succeeded. Adding, renaming or
+# removing a plain job here means changing the `CI` job's `needs:` list in the same change: a job
+# left out of it is required by nothing. The chain's `aggregate-needs` job runs
+# `check-aggregate-needs.mjs`, which fails, naming the job, when the list and the jobs drift apart.
+# A job can only `needs:` jobs in its own workflow, so the aggregate lives here and not in the
+# synced `synced-checks.yml`.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  # Lets the workflow be run on demand against a branch.
+  workflow_dispatch:
+  # Daily, on the default branch: an advisory published after a pull request merged shows up in
+  # `audit` below. A schedule runs the whole workflow, so every other job runs daily too, which
+  # costs nothing on a public repository and catches an upstream change that breaks the build.
+  schedule:
+    - cron: '17 6 * * *'
+
+# A new push to a pull request cancels that pull request's stale run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  # The shared chain. Its checks report as `checks / <job name> (<operating system>)`.
+  checks:
+    uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.13.0
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    with:
+      linux-only: true
+      mutate: false
+      mutate-paths: src
+
+  # Not in the chain: the repository's decision log has an order a person can break by hand.
+  decision-log:
+    name: Decision log order
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      # Fails, naming the two entries, when docs/DECISIONS.md is out of order.
+      - run: node scripts/check-decision-log-order.mjs
+
+
+  audit:
+    name: Composer audit (locked packages)
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:v2
+
+      # Reads `composer.lock`, so it needs no install. It fails on any advisory in a locked
+      # package, on a pull request and on the daily schedule. `--abandoned=ignore` leaves
+      # abandoned-package reports out: the command's default fails on them, and they are not
+      # a security advisory.
+      - run: composer audit --locked --abandoned=ignore
+
+  scripts:
+    name: Guard-script tests (vitest)
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      # `@statamic/cms` is a `file:` link into `vendor/statamic/cms`, so `npm ci` needs Composer's
+      # install first.
+      - uses: ./.github/actions/setup
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      # Node 22 bundles npm 10.9.x, below the `engines.npm` floor that `.npmrc`'s
+      # engine-strict enforces, so `npm ci` refuses to run without this pin.
+      - name: Pin npm to the engines floor
+        run: npm install -g npm@^11.10.0
+
+      - run: npm ci
+      - run: npm run test:scripts
+
+  built-assets:
+    name: Built assets (resources/dist matches source)
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Pin npm to the engines floor
+        run: npm install -g npm@^11.10.0
+
+      - run: npm ci
+
+      # The built files are committed, because a Composer install does not run npm. A fresh
+      # build that differs from what is committed means the sources changed without a rebuild.
+      - run: npm run build
+      - name: Fail if the committed build is out of date
+        run: |
+          changes=$(git status --porcelain -- resources/dist)
+          if [ -n "$changes" ]; then
+            echo "$changes"
+            echo "::error::resources/dist differs from a fresh build. Run npm run build and commit the result."
+            exit 1
+          fi
+
+  parallel-safe:
+    name: Parallel-safe tests (no shared state)
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      # Dependency-free, so it needs PHP and nothing else.
+      - run: composer test:parallel-safe
+
+  # The add-on promises `statamic/cms` at its `composer.json` constraint and PHP ^8.4, and every
+  # job above runs one combination. These legs run the dependency-sensitive checks (Larastan and
+  # Pest) against the others:
+  #   - lowest: the lowest `statamic/cms` the constraint allows, with the dependencies it needs
+  #     pulled to their lowest, so an API newer than the declared floor fails here.
+  #   - php85: the locked dependencies on PHP 8.5.
+  # The lowest bound is derived from the constraint in `composer.json`, never written here, so
+  # raising the floor (when code starts to need a newer `statamic/cms` API) moves this leg with it.
+  # Check names carry no version number for the same reason: the ruleset's list stays stable.
+  # Only the `statamic/cms` dependency closure is lowered; the dev tooling stays locked. The
+  # update rewrites `composer.lock` in the runner only.
+  # Two jobs rather than one matrix job: a job skipped by the RUN_REMOTE_CI gate is skipped before
+  # a matrix expands, so it would report the literal name `Compatibility (${{ matrix.name }})` and
+  # the two required checks below would never report. Each job's `name:` is a required check.
+  compatibility-lowest:
+    name: Compatibility (lowest statamic/cms)
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          php-version: '8.4'
+
+      - name: Lower statamic/cms and its dependencies to their lowest allowed versions
+        run: composer update statamic/cms --prefer-lowest --with-all-dependencies --no-interaction --no-progress
+
+      - name: Show the resolved statamic/cms
+        run: composer show statamic/cms | grep -E '^(name|versions)'
+
+      - run: composer stan
+      - run: composer test
+
+  compatibility-php85:
+    name: Compatibility (PHP 8.5)
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          php-version: '8.5'
+
+      - name: Show the resolved statamic/cms
+        run: composer show statamic/cms | grep -E '^(name|versions)'
+
+      - run: composer stan
+      - run: composer test
+
+  # The aggregate a ruleset requires; see THE `CI` AGGREGATE in the header. `always()` runs it
+  # when a needed job failed, so it reports a failure rather than staying pending. It also carries
+  # the RUN_REMOTE_CI gate: with the switch off every needed job is skipped, and this job would
+  # otherwise fail on those skips and block every merge, where the switch means "nothing ran".
+  ci:
+    name: CI
+    needs: [checks, decision-log, audit, scripts, built-assets, parallel-safe, compatibility-lowest, compatibility-php85]
+    if: always() && vars.RUN_REMOTE_CI != 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # `skipped` and `cancelled` fail as well as `failure`: a job that did not run proved nothing.
+      - name: Every needed job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Needed job results: $RESULTS"
+          # An empty list (an emptied `needs:`, a dropped `env:`) would run no iterations and pass having read nothing.
+          if [ -z "$RESULTS" ]; then echo "::error::No needed job results to read"; exit 1; fi
+          for result in $RESULTS; do
+            if [ "$result" != "success" ]; then
+              echo "::error::A needed job reported $result"
+              exit 1
+            fi
+          done
