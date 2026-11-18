@@ -10,11 +10,8 @@ name: CI
 #
 # THE PIN. `uses:` names a release tag of the reusable workflow, never a branch, so a change to
 # the chain reaches this repository only when the tag here moves. Dependabot does not move it.
-# `mutate: false` because the template's `src/` holds no code a mutator changes: the chain's full
-# mutation pass on a push to `main` would create no mutants and fail by design (measured:
-# `composer mutate -- --min=100` prints "0 Mutations for 0 Files created", exit 1). An add-on whose
-# `src/` has code deletes that input. With the input false the chain's `Chain result` job treats
-# the skipped `mutate` job as success and still fails on any other skipped job.
+# The chain's `mutate` job runs `composer mutate` over `src`; it needs code a mutator changes, which
+# `src/Ownership` provides.
 #
 # RUN_REMOTE_CI: budget kill-switch.
 # GitHub Actions minutes bill at the organization level, one pool shared by every UAMS-Web
@@ -72,7 +69,6 @@ jobs:
     if: vars.RUN_REMOTE_CI != 'false'
     with:
       linux-only: true
-      mutate: false
       mutate-paths: src
 
   # Not in the chain: the repository's decision log has an order a person can break by hand.

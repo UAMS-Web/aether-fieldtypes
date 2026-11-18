@@ -1,5 +1,5 @@
 {
-    "name": "statamic-addon-template",
+    "name": "aether-fieldtypes",
     "private": true,
     "type": "module",
     "engines": {

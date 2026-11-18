@@ -91,4 +91,53 @@ parameters:
     # site), with a comment naming the cause. Never a namespace-wide message
     # pattern. Unmatched entries fail the run (`reportUnmatchedIgnoredErrors`
     # defaults to true), so a stale ignore reds rather than rots.
-    ignoreErrors: []
+    # The shared traits are used by the fieldtype classes of each family slice, and none of those
+    # has moved in yet, so PHPStan reports every trait unused and skips its body. Each family
+    # slice that moves a user in analyses the trait; delete the entry for a trait when its first
+    # user lands (UAMS-Web/uams-statamic#996 to #999).
+    ignoreErrors:
+        -
+            identifier: trait.unused
+            path: src/Traits/BuildsPreloadConfig.php
+        -
+            identifier: trait.unused
+            path: src/Traits/ConfigCache.php
+        -
+            identifier: trait.unused
+            path: src/Traits/ConfigSectionWrapper.php
+        -
+            identifier: trait.unused
+            path: src/Traits/DefinesInputConfigFields.php
+        -
+            identifier: trait.unused
+            path: src/Traits/DynamicDefaultValue.php
+        -
+            identifier: trait.unused
+            path: src/Traits/FieldtypeValidationHelpers.php
+        -
+            identifier: trait.unused
+            path: src/Traits/FieldtypeValidationRules.php
+        -
+            identifier: trait.unused
+            path: src/Traits/HasSubfields.php
+        -
+            identifier: trait.unused
+            path: src/Traits/Input.php
+        -
+            identifier: trait.unused
+            path: src/Traits/InputMaskValueStorage.php
+        -
+            identifier: trait.unused
+            path: src/Traits/OtherOption.php
+        -
+            identifier: trait.unused
+            path: src/Traits/ProcessesInputValue.php
+        -
+            identifier: trait.unused
+            path: src/Traits/ProvidesAutocompleteOptions.php
+        -
+            identifier: trait.unused
+            path: src/Traits/RandomizesOptions.php
+        -
+            identifier: trait.unused
+            path: src/Traits/SometimesValidationRules.php

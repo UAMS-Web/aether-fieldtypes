@@ -1,4 +1,4 @@
-# Agent instructions for statamic-addon-template
+# Agent instructions for aether-fieldtypes
 
 This file is the single source of agent instructions for this repository. Claude Code, Cursor and Codex all read it directly; there is no `CLAUDE.md`, because Claude Code reads `AGENTS.md` only when `CLAUDE.md` is absent. Put instructions here, never in a `CLAUDE.md`.
 
@@ -46,7 +46,7 @@ Skills: [`code-quality`](.claude/skills/code-quality/SKILL.md), [`decision-log`]
 
 ## About this repository
 
-A Statamic add-on (`uams-web/statamic-addon-template`, namespace `UAMSWeb\AddonTemplate`). Replace this paragraph with what it does. It is a Composer library with no `artisan`, `.env`, database or front end of its own; a host application boots it through `extra.laravel.providers`. The `statamic-package-conventions` skill covers what that changes.
+A Statamic add-on (`uams-web/aether-fieldtypes`, namespace `UAMSWeb\Aether\Fieldtypes`). The shared fieldtype add-on for UAMS Statamic sites: the fieldtype traits, Control Panel JavaScript, the public Alpine helper and the owner check (`UAMSWeb\Aether\Fieldtypes\Ownership\OwnerMap`) that every fieldtype family builds on. The families move in behind this foundation, so it registers no fieldtype yet. It is a Composer library with no `artisan`, `.env`, database or front end of its own; a host application boots it through `extra.laravel.providers`. The `statamic-package-conventions` skill covers what that changes.
 
 ### Commands
 
