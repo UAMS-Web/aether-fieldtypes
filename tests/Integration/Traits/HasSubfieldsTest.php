@@ -634,3 +634,135 @@ it('turns a label into its key only on a strict match', function (): void {
 it('treats only a literal required rule as making the parent required', function (): void {
     expect(hasSubfieldsHarness(['validate' => [true]])->extraRules())->toHaveKey('contact.first_name', ['nullable']);
 });
+
+/**
+ * The key => config-field map of the single "Subfields" group `configFieldItems()` returns.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function hasSubfieldsConfigGroup(HasSubfieldsHarness $harness): array
+{
+    $items = $harness->configFieldItems();
+
+    expect($items)->toHaveCount(1)
+        ->and($items[0]['display'])->toBe('Subfields');
+
+    /** @var array<string, array<string, mixed>> $fields */
+    $fields = $items[0]['fields'];
+
+    return $fields;
+}
+
+it('groups the preset select, then each subfield section with its config fields, in one Subfields group', function (): void {
+    $fields = hasSubfieldsConfigGroup(hasSubfieldsHarness());
+
+    expect(array_keys($fields))->toBe([
+        'preset',
+        'section_first_name',
+        'first_name_include',
+        'first_name_required',
+        'first_name_label',
+        'first_name_placeholder',
+        'first_name_default',
+        'section_region_us',
+        'region_us_include',
+        'region_us_required',
+        'region_us_label',
+        'region_us_default',
+        'section_region_ca',
+        'region_ca_include',
+        'region_ca_required',
+        'region_ca_label',
+        'region_ca_default',
+        'section_notes',
+        'notes_include',
+        'notes_required',
+        'notes_label',
+        'notes_placeholder',
+        'notes_default',
+    ]);
+});
+
+it('builds each section as a subsection named for its subfield, with the preset condition only when there is one', function (): void {
+    $fields = hasSubfieldsConfigGroup(hasSubfieldsHarness());
+
+    expect($fields['section_first_name'])->toBe(['type' => 'subsection', 'display' => 'First Name'])
+        ->and($fields['section_region_us'])->toBe(['type' => 'subsection', 'display' => 'State', 'if' => ['preset' => 'us']])
+        ->and($fields['section_region_ca'])->toBe(['type' => 'subsection', 'display' => 'Province', 'if' => ['preset' => 'ca']]);
+});
+
+it('hands each subfield the preset from config, and the first preset when config names none', function (?string $configured, string $expected): void {
+    $harness = hasSubfieldsHarness($configured === null ? [] : ['preset' => $configured]);
+    $harness->useConfig($configured === null ? [] : ['preset' => $configured]);
+
+    $harness->configFieldItems();
+
+    expect($harness->presetArguments['first_name'])->toBe($expected)
+        ->and($harness->presetArguments['region_ca'])->toBe($expected);
+})->with([
+    'no preset in config' => [null, 'us'],
+    'the second preset in config' => ['ca', 'ca'],
+]);
+
+it('takes the first preset from the options of extended preset options', function (): void {
+    $harness = hasSubfieldsHarness();
+    $harness->presets = ['display' => 'Country', 'options' => ['ca' => 'Canada', 'us' => 'United States']];
+    $harness->useConfig([]);
+
+    $harness->configFieldItems();
+
+    expect($harness->presetArguments['first_name'])->toBe('ca');
+});
+
+it('hands each subfield a null preset when there are no presets', function (): void {
+    $harness = hasSubfieldsHarness();
+    $harness->presets = [];
+    $harness->useConfig([]);
+
+    $fields = hasSubfieldsConfigGroup($harness);
+
+    expect($harness->presetArguments['first_name'])->toBeNull()
+        ->and($fields)->not->toHaveKey('preset');
+});
+
+it('puts the preset select first and adds its keys under the keys it declares', function (): void {
+    $fields = hasSubfieldsConfigGroup(hasSubfieldsHarness());
+
+    expect(array_key_first($fields))->toBe('preset')
+        ->and($fields['preset']['type'])->toBe('select')
+        ->and($fields['preset']['display'])->toBe('Preset');
+});
+
+it('lists under a subfield only the config fields whose key starts with its handle and an underscore', function (): void {
+    $harness = hasSubfieldsHarness();
+    $harness->definitions = [
+        ['handle' => 'zip', 'display' => 'ZIP', 'type' => 'text', 'inclusion_default' => true],
+        ['handle' => 'zipcode', 'display' => 'ZIP Code', 'type' => 'text', 'inclusion_default' => true],
+    ];
+    $harness->presetConditions = [];
+
+    $keys = array_keys(hasSubfieldsConfigGroup($harness));
+    $zipSection = array_slice($keys, array_search('section_zip', $keys, true) + 1, 3);
+
+    expect($zipSection)->toBe(['zip_include', 'zip_required', 'zip_label'])
+        ->and(array_search('section_zipcode', $keys, true))->toBeGreaterThan(array_search('zip_default', $keys, true));
+});
+
+it('leaves out a subfield whose every config field is hidden', function (): void {
+    $harness = hasSubfieldsHarness();
+    $harness->definitions[0]['visibility'] = 'hidden';
+
+    $keys = array_keys(hasSubfieldsConfigGroup($harness));
+
+    expect($keys)->not->toContain('section_first_name')
+        ->and($keys)->not->toContain('first_name_include')
+        ->and($keys)->toContain('section_region_us');
+});
+
+it('returns an empty Subfields group when there are no subfields and no presets', function (): void {
+    $harness = hasSubfieldsHarness();
+    $harness->definitions = [];
+    $harness->presets = [];
+
+    expect($harness->configFieldItems())->toBe([['display' => 'Subfields', 'fields' => []]]);
+});
