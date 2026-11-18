@@ -1,0 +1,473 @@
+{
+    "transform_case": {
+        "display": "Transform Case",
+        "type": "select",
+        "instructions": "Choose whether to transform input characters to uppercase, lowercase, or leave them unchanged. If not set, no transformation occurs.",
+        "options": {
+            "uppercase": "Uppercase",
+            "lowercase": "Lowercase",
+            "null": "Not Specified"
+        },
+        "default": "null",
+        "if": {
+            "input_type": "contains_any email,number,search,tel,text,url",
+            "input_mask": "equals false"
+        },
+        "section": "appearance"
+    },
+    "input_mask": {
+        "display": "Enable Input Mask",
+        "type": "toggle",
+        "instructions": "Enables input masking to control and validate user input according to specific patterns and rules.",
+        "default": false,
+        "if": {
+            "input_type": "contains_any email,number,search,tel,text,url"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_class": {
+        "display": "Input Mask Class",
+        "type": "select",
+        "instructions": "Select the type of input mask to apply. Each class provides different validation and formatting behavior.",
+        "options": {
+            "MaskedDate": "Date",
+            "MaskedDynamic": "Dynamic",
+            "MaskedEnum": "Enum",
+            "MaskedNumber": "Number",
+            "MaskedPattern": "Pattern",
+            "MaskedRange": "Range",
+            "MaskedRegExp": "Regular Expression",
+            "RepeatBlock": "Repeat Block"
+        },
+        "default": "MaskedPattern",
+        "if": {
+            "input_mask": "equals true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_mask": {
+        "display": "Core Mask Definition (mask attribute)",
+        "type": "hidden",
+        "instructions": "Defines the core mask structure and behavior.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedDynamic,MaskedPattern,MaskedRegExp"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_mask_MaskedDynamic": {
+        "display": "Core Mask Definition (mask attribute; MaskedDynamic class)",
+        "type": "code",
+        "mode": "javascript",
+        "mode_selectable": false,
+        "indent_type": "spaces",
+        "instructions": "Defines the core mask structure and behavior.\n\nProvide a JavaScript array of mask configurations. Each element can be any valid mask configuration.\n\n**Example:**\n```javascript\n[\n  { mask: '0000-0000-0000-0000', placeholderChar: '_' },\n  { mask: Number, scale: 2 },\n  { mask: Date, pattern: 'd{.}`m{.}`Y' },\n  { mask: /[0-9a-f]/i, placeholderChar: '_' }\n]\n```\n\n**Note:** The `dispatch` function will automatically choose the most appropriate mask based on the input value.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedDynamic"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_mask_MaskedPattern": {
+        "display": "Core Mask Definition (mask attribute; MaskedPattern class)",
+        "type": "textarea",
+        "instructions": "Defines the core mask structure and behavior.\n\nProvide a pattern string that defines the input format.\n\n**Pattern Characters:**\n- `a`: Any letter (A-Z, a-z)\n- `0`: Any digit (0-9)\n- `#`: Any letter or digit (A-Z, a-z, 0-9)\n- `@`: Any letter, digit, dash, or underscore (A-Z, a-z, 0-9, -, _)\n- `*`: Any character\n\n**Special Syntax Characters:**\n- `[]`: Makes the enclosed input optional\n- `{}`: Includes the enclosed fixed part in the unmasked value\n- `` ` ``: Prevents symbols from shifting back\n- `\\`: Escapes pattern characters to treat them as fixed characters (e.g., `\u0000` for literal \"0\")\n\n**Examples:**\n- `0000-0000-0000-0000` (accepts values like `1234567890123456`, masking it as `1234-5678-9012-3456`)\n- `(000) 000-0000` (accepts values like `5551234567`, masking it as `(555) 123-4567`)\n- `aa-0000` (accepts values like `Ab-1234`, masking it as `Ab-1234`)\n- `###_####` (accepts values like `aBc1234`, masking it as `aBc_1234`)\n- ``###_`####`` (accepts values like `aBc1234`, masking it as `aBc_1234`; deleting the `c` will not shift the `1` back to the left of the underscore)\n- `@@@@` (accepts values like `_A-1`)\n- `00000[-0000]` (accepts values like `12345` and `12345-6789`, masking them as `12345` and `12345-6789`, respectively)\n- `+{7}(000)000-00-00` (accepts values like `1234567890`, includes the `7` in the _unmasked_ value as `1234567890`, masking it as `+7(123)456-78-90`)\n- `0 s\\almon` (accepts values like `9`, masking it as `9 salmon`)",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedPattern"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_mask_MaskedRegExp": {
+        "display": "Core Mask Definition (mask attribute; MaskedRegExp class)",
+        "type": "text",
+        "instructions": "Defines the core mask structure and behavior.\n\nProvide a regular expression pattern. You can include the slashes or not - both formats are supported.\n\n**Examples:**\n```\n[A-Za-z]+\n/^[A-Za-z]+$/\n[0-9a-fA-F]{6}\n```\n\n**Note:** The pattern will be used to validate input. Only characters that match the pattern will be accepted.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedRegExp"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_store_unmasked": {
+        "display": "Store Unmasked Value",
+        "type": "toggle",
+        "instructions": "Controls whether to store the masked (formatted) value or the unmasked (raw) value.\n\n**When enabled (true):**\n- Stores the raw, unmasked value (e.g., `1234.5` for a number)\n- Preserves the original data without formatting\n- Useful for data processing, calculations, or when you need the raw value\n\n**When disabled (false):**\n- Stores the formatted, masked value (e.g., `1,234.50` for a number)\n- Preserves the exact display format\n- Useful for consistent display or when formatting is part of the data\n\n**Examples:**\n- Phone: `(555) 123-4567` (masked) vs `5551234567` (unmasked)\n- Number: `1,234.50` (masked) vs `1234.5` (unmasked)\n- Date: `12/31/2024` (masked) vs `2024-12-31` (unmasked)",
+        "default": false,
+        "if": {
+            "input_mask": "equals true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_prepend_text_enabled": {
+        "display": "Prepend Text to the Display Value",
+        "type": "toggle",
+        "instructions": "When enabled, adds text before the masked value in the display. This is useful for adding currency symbols, prefixes, or other text that should appear before the input value.",
+        "default": false,
+        "if": {
+            "input_mask": "equals true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_prepend_text": {
+        "display": "Prepended Text",
+        "type": "text",
+        "instructions": "The text to prepend to the display value. This text will appear before the masked value in the input field.",
+        "default": null,
+        "if": {
+            "input_mask": "equals true",
+            "input_mask_prepend_text_enabled": "equals true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_append_text_enabled": {
+        "display": "Append Text to the Display Value",
+        "type": "toggle",
+        "instructions": "When enabled, adds text after the masked value in the display. This is useful for adding suffixes, units, or other text that should appear after the input value.",
+        "default": false,
+        "if": {
+            "input_mask": "equals true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_append_text": {
+        "display": "Appended Text",
+        "type": "text",
+        "instructions": "The text to append to the display value. This text will appear after the masked value in the input field.",
+        "default": null,
+        "if": {
+            "input_mask": "equals true",
+            "input_mask_append_text_enabled": "equals true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_autofix": {
+        "display": "Automatically Correct Invalid Input (autofix attribute)",
+        "type": "radio",
+        "instructions": "**Date:** Validates and corrects date components.\n\n**Dynamic:** Delegates autofix behavior to the currently active mask.\n\n**Enum:** Filters input to match valid enum values and auto-completes partial matches.\n\n**Function:** Uses custom function to determine valid input and applies corrections.\n\n**Number:** Adjusts numeric values to fit within min/max bounds.\n\n**Pattern:** Replaces invalid characters with valid pattern matches.\n\n**Range:** Adjusts values to fit within the specified range bounds.\n\n**Regular Expression:** Filters input to match the regular expression pattern.\n\n**Repeat Block:** Applies autofix to each repeated block in the pattern.",
+        "options": {
+            "true": "Enabled",
+            "false": "Disabled",
+            "pad": "Pad the Value With Leading Zeros to Match the Pattern Length (Range only)"
+        },
+        "cast_booleans": true,
+        "default": "false",
+        "if": {
+            "input_mask": "equals true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_blocks": {
+        "display": "Object Defining Pattern Blocks for Mask Construction (blocks attribute)",
+        "type": "code",
+        "mode": "javascript",
+        "mode_selectable": false,
+        "indent_type": "spaces",
+        "instructions": "**Date:** Uses predefined blocks for day (`d`), month (`m`), and year (`Y`) with range constraints.\n\n**Enum:** Uses generated blocks based on enum values and lengths.\n\n**Pattern:** Defines custom pattern blocks for mask construction.\n\n**Range:** Uses generated blocks based on range bounds and maxLength.\n\n**Repeat Block:** Uses blocks for repeating pattern structures.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedPattern,MaskedDate,MaskedEnum,MaskedRange,RepeatBlock"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_compiledMasks": {
+        "display": "Mask Objects That Can Be Switched Between Based on Input (compiledMasks attribute)",
+        "type": "code",
+        "mode": "javascript",
+        "mode_selectable": false,
+        "indent_type": "spaces",
+        "instructions": "Array of compiled mask instances that can be dynamically switched between based on input content.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedDynamic"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_currentMask": {
+        "display": "Mask That is Currently Processing Input (currentMask attribute)",
+        "type": "text",
+        "instructions": "Reference to the currently active mask instance that is processing input.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedDynamic"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_definitions": {
+        "display": "Object Defining Input Definitions for Pattern Masks (definitions attribute)",
+        "type": "code",
+        "mode": "javascript",
+        "mode_selectable": false,
+        "indent_type": "spaces",
+        "instructions": "A JSON object mapping each pattern character to a regular-expression source string. Parsed as JSON (not executed), each value is compiled to a RegExp. Example: `{\"#\": \"[0-9X]\"}` makes the `#` slot accept a digit or an uppercase X.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedPattern,MaskedDate,MaskedEnum,MaskedRange,RepeatBlock"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_displayChar": {
+        "display": "Character Displayed for Filled Input Positions (displayChar attribute)",
+        "type": "text",
+        "instructions": "Used by pattern-based classes to show a different character when input is complete vs. placeholder.",
+        "placeholder": "e.g., #",
+        "character_limit": 1,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedPattern,MaskedDate,MaskedEnum,MaskedRange,RepeatBlock"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_eager": {
+        "display": "Eager Placeholder Behavior (eager attribute)",
+        "type": "radio",
+        "instructions": "When enabled, placeholders are shown immediately. For `remove` mode, removes placeholders when not needed. For `append` mode, appends placeholders eagerly.",
+        "options": {
+            "true": "Enabled",
+            "false": "Disabled",
+            "remove": "Remove Placeholders When Not Needed",
+            "append": "Append Placeholders Eagerly"
+        },
+        "cast_booleans": true,
+        "default": "false",
+        "if": {
+            "input_mask": "true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_enum": {
+        "display": "Valid Enum Values (enum attribute)",
+        "type": "list",
+        "instructions": "Array of valid enum values that the mask will accept and validate against. Input must match one of these values.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedEnum"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_exposeMask": {
+        "display": "Exposed Mask Instance (exposeMask attribute)",
+        "type": "text",
+        "instructions": "Provides access to the currently active mask instance for external manipulation and control.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedDynamic"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_from": {
+        "display": "Minimum Bound for Range Validation (from attribute)",
+        "type": "float",
+        "instructions": "Defines the minimum acceptable value in the range. Input values below this will be rejected.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedRange"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_lazy": {
+        "display": "Only Display Placeholder When Needed (lazy attribute)",
+        "type": "toggle",
+        "instructions": "When enabled, placeholders are only shown when needed. When disabled, placeholders are always visible.",
+        "default": true,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedPattern,MaskedDate,MaskedEnum,MaskedRange,RepeatBlock"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_mapToRadix": {
+        "display": "Characters That Should Be Mapped to the Decimal Separator (mapToRadix attribute)",
+        "type": "list",
+        "instructions": "Array of characters that should be treated as decimal separators. Useful for locale-specific number formatting (e.g., comma vs period).",
+        "character_limit": 1,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_max": {
+        "display": "Maximum Bound for Validation (max attribute)",
+        "type": "text",
+        "instructions": "**Date:** Date object defining the latest acceptable date. Enter the date in ISO format (YYYY-MM-DD) or any valid JavaScript date string (e.g., `2024-12-31`, `Dec 31, 2024`, `2024/12/31`).\n\n**Number:** Integer or float defining the maximum acceptable numeric value.\n\n**Range:** Integer or float defining the maximum acceptable value in the range.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber,MaskedDate,MaskedRange"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_maxLength": {
+        "display": "Maximum Length Constraint (maxLength attribute)",
+        "type": "float",
+        "instructions": "Defines the maximum length for range values. Shorter numbers will be padded with leading zeros to match this length.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedRange"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_min": {
+        "display": "Minimum Bound for Validation (min attribute)",
+        "type": "text",
+        "instructions": "**Number:** Integer or float defining the minimum acceptable numeric value.\n\n**Date:** Date object defining the earliest acceptable date. Enter the date in ISO format (YYYY-MM-DD) or any valid JavaScript date string (e.g., `2024-01-01`, `Jan 1, 2024`, `2024/01/01`).\n\n**Range:** Integer or float defining the minimum acceptable value in the range.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber,MaskedDate,MaskedRange"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_normalizeZeros": {
+        "display": "Normalize Zeros (normalizeZeros attribute)",
+        "type": "toggle",
+        "instructions": "When enabled, leading and trailing zeros are removed from the input.",
+        "default": false,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_overwrite": {
+        "display": "Character Overwriting (overwrite attribute)",
+        "type": "radio",
+        "instructions": "When enabled, new characters overwrite existing ones. `shift` mode shifts existing characters instead of overwriting.",
+        "options": {
+            "true": "Enabled",
+            "false": "Disabled",
+            "shift": "Shift Existing Characters Instead of Overwriting"
+        },
+        "cast_booleans": true,
+        "default": "false",
+        "if": {
+            "input_mask": "true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_padFractionalZeros": {
+        "display": "Pad Fractional Zeros (padFractionalZeros attribute)",
+        "type": "toggle",
+        "instructions": "When enabled, pads trailing zeros after the decimal point at the end of editing.",
+        "default": false,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_parent": {
+        "display": "Parent Masked Instance (parent attribute)",
+        "type": "text",
+        "instructions": "Reference to parent masked instance for nested mask structures and delegation of operations.",
+        "if": {
+            "input_mask": "true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_pattern": {
+        "display": "Date Pattern (pattern attribute)",
+        "type": "text",
+        "instructions": "Used to define the date input structure.",
+        "placeholder": "e.g., d{.}`m{.}`Y",
+        "default": "d{.}`m{.}`Y",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedDate"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_placeholderChar": {
+        "display": "Placeholder Character (placeholderChar attribute)",
+        "type": "text",
+        "instructions": "Used by to indicate where input is expected.",
+        "placeholder": "e.g., _",
+        "default": "_",
+        "character_limit": 1,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedPattern,MaskedDate,MaskedEnum,MaskedRange,RepeatBlock"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_prepare_case": {
+        "display": "Transform Case While Typing (prepareChar attribute)",
+        "type": "select",
+        "instructions": "Automatically transform each character to upper- or lowercase as it is typed into the mask. This is a declarative replacement for the former free-form `prepareChar` JavaScript, no code is executed.",
+        "options": {
+            "uppercase": "Uppercase",
+            "lowercase": "Lowercase"
+        },
+        "clearable": true,
+        "if": {
+            "input_mask": "true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_radix": {
+        "display": "Decimal Separator Character (radix attribute)",
+        "type": "text",
+        "instructions": "Defines the character that separates integer and fractional parts of numbers.",
+        "placeholder": "e.g., .",
+        "default": ".",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_repeat": {
+        "display": "Repetition Configuration (repeat attribute)",
+        "type": "text",
+        "instructions": "Can be a number (fixed repetitions) or `[min, max]` array (variable repetitions). Controls how many times a block pattern repeats.",
+        "placeholder": "e.g., 3 or [1, 5]",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any RepeatBlock"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_scale": {
+        "display": "Number of Digits After Decimal Point (scale attribute)",
+        "type": "float",
+        "instructions": "Controls the precision of decimal numbers.",
+        "placeholder": "e.g., 0",
+        "default": 0,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_skipInvalid": {
+        "display": "Skip Invalid Characters (skipInvalid attribute)",
+        "type": "toggle",
+        "instructions": "When enabled, characters that don't match the mask pattern are ignored rather than causing errors.",
+        "default": true,
+        "if": {
+            "input_mask": "true"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_thousandsSeparator": {
+        "display": "Character Used to Separate Thousands (thousandsSeparator attribute)",
+        "type": "text",
+        "instructions": "Used for number formatting with locale-specific separators.",
+        "placeholder": "e.g., ,",
+        "default": ",",
+        "character_limit": 1,
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedNumber"
+        },
+        "section": "input_mask"
+    },
+    "input_mask_to": {
+        "display": "Maximum Bound for Range Validation (to attribute)",
+        "type": "float",
+        "instructions": "Defines the maximum acceptable value in the range. Input values above this will be rejected.",
+        "if": {
+            "input_mask": "true",
+            "input_mask_class": "contains_any MaskedRange"
+        },
+        "section": "input_mask"
+    }
+}

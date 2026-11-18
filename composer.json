@@ -1,13 +1,14 @@
 {
-    "name": "uams-web/statamic-addon-template",
-    "description": "Starting point for UAMS Statamic add-ons. Replace this description when you start an add-on from it.",
+    "name": "uams-web/aether-fieldtypes",
+    "description": "The shared fieldtype add-on for UAMS Statamic sites: the traits, Control Panel JavaScript, public Alpine helper and owner check that every fieldtype family builds on.",
     "keywords": [
         "statamic",
-        "statamic-addon"
+        "statamic-addon",
+        "fieldtypes"
     ],
     "type": "statamic-addon",
     "license": "MIT",
-    "homepage": "https://github.com/UAMS-Web/statamic-addon-template",
+    "homepage": "https://github.com/UAMS-Web/aether-fieldtypes",
     "authors": [
         {
             "name": "UAMS Web Services"
@@ -18,27 +19,27 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/UAMS-Web/statamic-addon-template/issues",
-        "source": "https://github.com/UAMS-Web/statamic-addon-template"
+        "issues": "https://github.com/UAMS-Web/aether-fieldtypes/issues",
+        "source": "https://github.com/UAMS-Web/aether-fieldtypes"
     },
     "autoload": {
         "psr-4": {
-            "UAMSWeb\\AddonTemplate\\": "src/"
+            "UAMSWeb\\Aether\\Fieldtypes\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "UAMSWeb\\AddonTemplate\\Tests\\": "tests/"
+            "UAMSWeb\\Aether\\Fieldtypes\\Tests\\": "tests/"
         }
     },
     "extra": {
         "statamic": {
-            "name": "Addon Template",
-            "description": "Replace this description when you start an add-on from the template."
+            "name": "Aether Fieldtypes",
+            "description": "Shared fieldtype traits, Control Panel JavaScript, a public Alpine helper and an owner check for each fieldtype handle and component name."
         },
         "laravel": {
             "providers": [
-                "UAMSWeb\\AddonTemplate\\ServiceProvider"
+                "UAMSWeb\\Aether\\Fieldtypes\\ServiceProvider"
             ]
         },
         "composer-exit-on-patch-failure": true

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import statamic from '@statamic/cms/vite-plugin'
+import tailwindcss from '@tailwindcss/vite'
 
 // Builds the add-on's Control Panel assets (#15). The `input` and `publicDirectory` here must
 // match the `$vite` property on `src/ServiceProvider.php`; Statamic reads the manifest this
@@ -9,6 +10,7 @@ import statamic from '@statamic/cms/vite-plugin'
 export default defineConfig({
     plugins: [
         statamic(),
+        tailwindcss(),
         laravel({
             input: ['resources/js/cp.js', 'resources/css/cp.css'],
             publicDirectory: 'resources/dist',

@@ -1,1 +1,6 @@
-/* Control Panel styles for the add-on. Empty until the first component needs one. */
+/* Control Panel styles for the add-on. */
+@import "@statamic/cms/tailwind.css";
+
+@source "../js";
+
+@import "./components/fieldtypes/subsection.css";

@@ -1,0 +1,13 @@
+{
+    "name": "fixture/c",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "UAMSWeb\\Aether\\Fieldtypes\\Tests\\Support\\Fixtures\\PackageC\\PackageCProvider",
+                "UAMSWeb\\Aether\\Fieldtypes\\Tests\\Support\\Fixtures\\PackageC\\NotAProvider",
+                "Not\\A\\Class",
+                42
+            ]
+        }
+    }
+}
