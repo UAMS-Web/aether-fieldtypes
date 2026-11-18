@@ -89,6 +89,10 @@ node .claude/skills/repository-settings/scripts/apply-addon-settings.mjs UAMS-We
 - **Tags, releases and Packagist**, per [the submission checklist](docs/SUBMISSION.md).
 - A `LICENSE` and `composer.json`'s `license` field, once `UAMS-Web/uams-statamic#261` is decided.
 
+## License
+
+MIT. See [`LICENSE`](LICENSE).
+
 ## Keeping the tooling separable
 
 The generic tooling is meant to move into the sync later, so it sits in plain files (`scripts/`, the configuration files, `.github/`) with nothing in them specific to an add-on. Keep it that way: add-on logic goes in `src/` and `tests/`, not in the tooling.
