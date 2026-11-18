@@ -5,15 +5,9 @@ declare(strict_types=1);
 use Statamic\Fields\Field;
 use Statamic\Fields\Fieldtype;
 use UAMSWeb\Aether\Fieldtypes\Tests\Support\Doubles\HasSubfieldsHarness;
-use UAMSWeb\Aether\Fieldtypes\Tests\Support\Doubles\SubsectionStandIn;
 use UAMSWeb\Aether\Fieldtypes\Traits\HasSubfields;
 
 covers(HasSubfields::class);
-
-// The trait names the site's `subsection` fieldtype by handle; register a stand-in for the host's
-beforeEach(function (): void {
-    SubsectionStandIn::register();
-});
 
 /**
  * The `HasSubfields` trait's storage mapping, the subfield list it hands the

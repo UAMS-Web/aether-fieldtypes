@@ -198,7 +198,7 @@ final class OwnerMap
     }
 
     /**
-     * The source of each Control Panel script a provider declares through `$vite` or `$scripts`.
+     * The source of each Control Panel script a provider declares through `$vite`.
      *
      * @param  array<string, mixed>  $defaults  The provider's default property values.
      * @return list<string>

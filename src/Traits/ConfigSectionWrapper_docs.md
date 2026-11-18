@@ -54,7 +54,7 @@ The `ConfigSectionWrapper` trait provides a single method to wrap existing confi
 ```php
 <?php
 
-namespace App\Fieldtypes;
+namespace UAMSWeb\Aether\Fieldtypes\Traits;
 
 use Statamic\Fieldtypes\Floatval as BaseFloatval;
 use UAMSWeb\Aether\Fieldtypes\Traits\ConfigSectionWrapper;
@@ -605,7 +605,7 @@ The `app/Fieldtypes/Floatval.php` file demonstrates this approach:
 ```php
 <?php
 
-namespace App\Fieldtypes;
+namespace UAMSWeb\Aether\Fieldtypes\Traits;
 
 use Statamic\Fieldtypes\Floatval as BaseFloatval;
 use UAMSWeb\Aether\Fieldtypes\Traits\ConfigSectionWrapper;
@@ -664,9 +664,9 @@ This results in the `default` field being wrapped in a "Behavior" section with a
 
 ## Files Created
 
-1. `app/Fieldtypes/Traits/ConfigSectionWrapper.php` - The trait providing section wrapping functionality
+1. `src/Traits/ConfigSectionWrapper.php` - The trait providing section wrapping functionality
 2. `app/Fieldtypes/Floatval.php` - Updated to use the trait
-3. `app/Fieldtypes/Traits/ConfigSectionWrapper_docs.md` - This documentation
+3. `src/Traits/ConfigSectionWrapper_docs.md` - This documentation
 
 ## Usage in Other Fieldtypes
 

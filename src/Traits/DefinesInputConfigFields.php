@@ -1255,7 +1255,7 @@ trait DefinesInputConfigFields
             'instructions' => $overrides['input_mask_mask']['instructions'] ?? 'Defines the core mask structure and behavior.',
             'if' => [
                 'input_mask' => 'true',
-                'input_mask_class' => 'contains_any MaskedDynamic,MaskedPattern,MaskedRegExp', // `mask` is always `Number` for `MaskedNumber`; always `Date` for `MaskedDate`; dynamically generated for `MaskedEnum`, `MaskedRange`, `RepeatBlock`; their values are handled in resources/js/components/fieldtypes/mixins/IMaskMixin.js
+                'input_mask_class' => 'contains_any MaskedDynamic,MaskedPattern,MaskedRegExp', // `mask` is always `Number` for `MaskedNumber`; always `Date` for `MaskedDate`; dynamically generated for `MaskedEnum`, `MaskedRange`, `RepeatBlock`; their values are handled in the input mask mixin, which moves in with the Input family
             ],
             'section' => 'input_mask',
         ], 'input_mask_mask_MaskedDynamic' => [

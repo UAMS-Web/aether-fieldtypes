@@ -44,8 +44,22 @@ it('passes for the add-ons the test application booted', function (): void {
     $map->assertSingleOwners();
 });
 
-it('finds this add-on among the add-ons it inspects, so an empty result is not blindness', function (): void {
-    // The add-on claims no fieldtype yet, so prove the walk reached it through a package that does
+it("finds this add-on's own claims, so an empty result is not blindness", function (): void {
+    // Read this add-on's claims through the add-ons the test application booted
+    $own = array_filter(
+        OwnerMap::fromInstalledAddons()->claims(),
+        fn (Claim $claim): bool => $claim->owner === 'uams-web/aether-fieldtypes',
+    );
+
+    // Expect the subsection fieldtype and the Control Panel component this add-on registers
+    expect(ownershipDescribe(array_values($own)))->toContain(
+        'uams-web/aether-fieldtypes|fieldtype handle|subsection',
+        'uams-web/aether-fieldtypes|Control Panel component|subsection-fieldtype',
+    );
+});
+
+it('finds the fixture packages and lists this add-on among those Statamic booted', function (): void {
+    // Read the fixture packages' claims
     $owners = array_map(fn (Claim $claim): string => $claim->owner, ownershipFixtureClaims());
 
     // Expect both fixture packages seen, and the booted add-on listed by Statamic

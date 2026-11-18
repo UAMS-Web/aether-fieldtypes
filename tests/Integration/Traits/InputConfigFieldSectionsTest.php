@@ -14,8 +14,8 @@ beforeEach(function (): void {
  * `UAMSWeb\Aether\Fieldtypes\Traits\DefinesInputConfigFields::groupConfigFieldsIntoSections()`,
  * extracted from the former monolithic `Input` trait (issue UAMS-Web/uams-statamic-archive#873).
  *
- * These lock in the observable contract the Control Panel relies on — section
- * order, per-section metadata, and the type-driven hidden bucket — so the
+ * These lock in the observable contract the Control Panel relies on: section
+ * order, per-section metadata, and the type-driven hidden bucket, so the
  * decomposition (and any future change to the grouping) stays behavior-preserving.
  *
  * Mutation: 100% on UAMSWeb\Aether\Fieldtypes\Traits\DefinesInputConfigFields (1741 mutants, --covered-only).
@@ -108,7 +108,7 @@ it('omits optional metadata from the input mask and hidden sections', function (
 it('isolates hidden-typed fields in the hidden section', function (): void {
     $sections = inputConfigTextFieldtype()->configFieldItems();
 
-    // The trailing section is the hidden bucket — every field must be hidden.
+    // The trailing section is the hidden bucket - every field must be hidden.
     // Assert the structure explicitly (rather than silently coercing a missing
     // 'fields' key to an empty list) so a structural regression in the SUT fails
     // the test instead of vacuously passing.
