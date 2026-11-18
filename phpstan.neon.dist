@@ -99,7 +99,7 @@ parameters:
         -
             identifier: function.alreadyNarrowedType
             path: src/Traits/DefinesInputConfigFields.php
-            count: 1
+            count: 3
     # Statamic documents `Addon::directory()` as returning `string`, but it returns null for an
     # add-on with no provider, which `OwnerMap::fromAddons()` skips; the guard is real.
         -

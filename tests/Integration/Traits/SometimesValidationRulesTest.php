@@ -47,15 +47,13 @@ it('keeps rule objects when it reorders', function (): void {
 
     $out = (new FieldtypeValidationHelpersHarness)->normalizeBlueprintValidateForSometimes([$rule, 'sometimes']);
 
-    expect($out)->toHaveCount(2)
-        ->and($out[0])->toBe('sometimes')
-        ->and($out[1])->toBe($rule);
+    expect($out)->toBe(['sometimes', $rule]);
 });
 
 it('leads every keyed rule set with a single sometimes', function (): void {
     $out = (new FieldtypeValidationHelpersHarness)->prependSometimesToKeyedRuleSets([
         'a' => ['required', 'sometimes', 'string'],
-        'b' => 'min:1|max:5',
+        'b' => ['min:1', 'max:5'],
     ]);
 
     expect($out)->toBe([

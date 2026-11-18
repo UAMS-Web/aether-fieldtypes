@@ -1,0 +1,856 @@
+{
+    "accept": {
+        "display": "Accepted File Types (accept attribute)",
+        "instructions": "Specify allowed file types for file uploads. Use this attribute to restrict file selection to specific MIME types or file extensions.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any file"
+        },
+        "section": "constraints"
+    },
+    "accesskey": {
+        "display": "Keyboard Shortcut Key (accesskey)",
+        "instructions": "The `accesskey` attribute specifies a shortcut key to activate/focus an element. The `accesskey` attribute value must be a single character (a letter or a digit).\n\n**Warning:** Using `accesskey`s is difficult because they may conflict with other key standards in the browser. To avoid this problem, most browsers will use `accesskey`s only if pressed together with the Alt key.\n\n**Concerns:** Adapting `accesskey`s to all international languages are difficult. The `accesskey` value may not be present on all keyboards. Because of these concerns, it is advised not to use `accesskey`s.",
+        "type": "text",
+        "default": null,
+        "character_limit": 1,
+        "validate": null,
+        "section": "accessibility"
+    },
+    "alt": {
+        "display": "Alternative Text (alt attribute)",
+        "instructions": "Provide alternative text for image inputs. Use this attribute to describe the image for accessibility and when the image cannot be displayed.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image"
+        },
+        "section": "accessibility"
+    },
+    "anchor": {
+        "display": "Anchor Element ID (anchor attribute)",
+        "instructions": "Set the ID of the element to anchor this positioned element to.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "experimental"
+    },
+    "autocapitalize": {
+        "display": "Enable Autocapitalize",
+        "instructions": "Control whether and how text input is automatically capitalized.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "on": "On",
+            "off": "Off",
+            "null": "Not Specified"
+        },
+        "if": {
+            "input_type": "contains_any button,checkbox,color,date,datetime-local,file,hidden,image,month,number,radio,range,reset,search,submit,tel,text,time,week"
+        },
+        "validate": null,
+        "internal": true,
+        "section": "accessibility"
+    },
+    "autocapitalize_setting": {
+        "display": "Autocapitalize Setting",
+        "instructions": "Choose how text should be automatically capitalized when autocapitalize is enabled.",
+        "type": "select",
+        "default": null,
+        "options": {
+            "sentences": "Sentences",
+            "words": "Words",
+            "characters": "Characters"
+        },
+        "if": {
+            "autocapitalize": "on"
+        },
+        "validate": null,
+        "section": "behavior"
+    },
+    "autocomplete_query": {
+        "display": "Enable Autocomplete",
+        "instructions": "Control whether the browser should automatically fill in this field based on previously entered values.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "on": "On",
+            "off": "Off",
+            "null": "Not Specified"
+        },
+        "if": {
+            "input_type": "contains_any color,date,datetime-local,email,file,hidden,image,month,number,password,range,reset,search,submit,tel,text,time,url,week"
+        },
+        "validate": null,
+        "internal": true,
+        "section": "suggestions"
+    },
+    "autocomplete": {
+        "display": "Autocomplete Value",
+        "instructions": "Specify the type of data this field contains to help browsers provide appropriate autocomplete suggestions.",
+        "type": "select",
+        "clearable": false,
+        "options": {
+            "null": "Not Specified",
+            "name": "Name (name)",
+            "honorific-prefix": "Honorific Prefix (honorific-prefix)",
+            "given-name": "Given Name (given-name)",
+            "additional-name": "Additional Name (additional-name)",
+            "family-name": "Family Name (family-name)",
+            "honorific-suffix": "Honorific Suffix (honorific-suffix)",
+            "nickname": "Nickname (nickname)",
+            "bday": "Birthday (bday)",
+            "bday-day": "Birthday Day (bday-day)",
+            "bday-month": "Birthday Month (bday-month)",
+            "bday-year": "Birthday Year (bday-year)",
+            "sex": "Sex (sex)",
+            "photo": "Photo (photo)",
+            "email": "Email (email)",
+            "tel": "Telephone (tel)",
+            "tel-country-code": "Telephone Country Code (tel-country-code)",
+            "tel-national": "Telephone National (tel-national)",
+            "tel-area-code": "Telephone Area Code (tel-area-code)",
+            "tel-local": "Telephone Local (tel-local)",
+            "tel-local-prefix": "Telephone Local Prefix (tel-local-prefix)",
+            "tel-local-suffix": "Telephone Local Suffix (tel-local-suffix)",
+            "tel-extension": "Telephone Extension (tel-extension)",
+            "impp": "IMPP (impp)",
+            "street-address": "Street Address (street-address)",
+            "address-line1": "Address Line 1 (address-line1)",
+            "address-line2": "Address Line 2 (address-line2)",
+            "address-line3": "Address Line 3 (address-line3)",
+            "address-level1": "Address Level 1 (address-level1)",
+            "address-level2": "Address Level 2 (address-level2)",
+            "address-level3": "Address Level 3 (address-level3)",
+            "address-level4": "Address Level 4 (address-level4)",
+            "postal-code": "Postal Code (postal-code)",
+            "country": "Country (country)",
+            "country-name": "Country Name (country-name)",
+            "organization": "Organization (organization)",
+            "organization-title": "Organization Title (organization-title)",
+            "cc-name": "Credit Card Name (cc-name)",
+            "cc-given-name": "Credit Card Given Name (cc-given-name)",
+            "cc-additional-name": "Credit Card Additional Name (cc-additional-name)",
+            "cc-family-name": "Credit Card Family Name (cc-family-name)",
+            "cc-number": "Credit Card Number (cc-number)",
+            "cc-exp": "Credit Card Expiration (cc-exp)",
+            "cc-exp-month": "Credit Card Expiration Month (cc-exp-month)",
+            "cc-exp-year": "Credit Card Expiration Year (cc-exp-year)",
+            "cc-csc": "Credit Card Security Code (cc-csc)",
+            "cc-type": "Credit Card Type (cc-type)",
+            "current-password": "Current Password (current-password)",
+            "new-password": "New Password (new-password)",
+            "username": "Username (username)",
+            "one-time-code": "One-Time Code (one-time-code)",
+            "webauthn": "WebAuthn (webauthn)",
+            "url": "URL (url)",
+            "language": "Language (language)",
+            "transaction-amount": "Transaction Amount (transaction-amount)",
+            "transaction-currency": "Transaction Currency (transaction-currency)"
+        },
+        "default": "null",
+        "if": {
+            "autocomplete_query": "on"
+        },
+        "validate": null,
+        "section": "suggestions"
+    },
+    "autocorrect": {
+        "display": "Enable Autocorrect (autocorrect attribute)",
+        "instructions": "Control whether the browser should automatically correct spelling and grammar errors.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "on": "On",
+            "off": "Off",
+            "null": "Not Specified"
+        },
+        "internal": true,
+        "validate": null,
+        "section": "accessibility"
+    },
+    "focus": {
+        "display": "Auto Focus on Load (autofocus attribute)",
+        "instructions": "Control whether this field automatically receives focus when the page loads.\n\nFor text fields, `title` and `alt` fields focus by default unless explicitly disabled.\n\nSetting this to \"Disable\" will prevent focus even for `title`/`alt` fields.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "true": "Enable: Always focus this field",
+            "false": "Disable: Never focus this field (even if title/alt)",
+            "null": "Default: Use default behavior (title/alt fields focus automatically)"
+        },
+        "validate": null,
+        "section": "behavior"
+    },
+    "debounce": {
+        "display": "Debounce Updates",
+        "instructions": "When enabled, the stored value updates after a short delay when typing stops, instead of on every keystroke.",
+        "type": "toggle",
+        "default": false,
+        "validate": null,
+        "section": "behavior"
+    },
+    "capture": {
+        "display": "Media Capture Source (capture attribute)",
+        "instructions": "Specify which camera to use for file inputs. Use this attribute to control whether the front-facing or back-facing camera is used for media capture.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "user": "User: The user-facing camera and/or microphone should be used.",
+            "environment": "Environment: The outward-facing camera and/or microphone should be used.",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "if": {
+            "input_type": "contains_any file"
+        },
+        "section": "behavior"
+    },
+    "checked": {
+        "display": "Default Checked State (checked attribute)",
+        "instructions": "Set the initial checked state for checkboxes and radio buttons. Use this attribute to pre-select this input when the form loads.",
+        "type": "toggle",
+        "default": false,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any checkbox,radio"
+        },
+        "section": "value_and_state"
+    },
+    "class": {
+        "display": "CSS Classes (class attribute)",
+        "instructions": "Set one or more CSS class names for this element. Separate multiple classes with spaces.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "identification"
+    },
+    "contenteditable": {
+        "display": "Content Editable",
+        "instructions": "Control whether the field content is editable. Enumerated: `true`, `false`, or `not-specified`.",
+        "type": "hidden",
+        "default": null,
+        "validate": null,
+        "section": "appearance"
+    },
+    "dir": {
+        "display": "Text Direction (dir attribute)",
+        "instructions": "Set the text direction for this element.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "ltr": "LTR: The element's text is laid out from left to right",
+            "rtl": "RTL: The element's text is laid out from right to left",
+            "auto": "Auto: Let the user agent decide",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "accessibility"
+    },
+    "dirname": {
+        "display": "Text Direction Field Name (dirname attribute)",
+        "instructions": "Submit the text direction with form data. Use this attribute to include the text direction when the form is submitted.",
+        "type": "hidden",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any email,hidden,search,tel,text,url"
+        },
+        "section": "accessibility"
+    },
+    "draggable": {
+        "display": "Enable Dragging (draggable attribute)",
+        "instructions": "Set whether this element can be dragged by the user.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "true": "True: The element can be dragged",
+            "false": "False: The element cannot be dragged",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "behavior"
+    },
+    "enterkeyhint": {
+        "display": "Enter Key Action Label (enterkeyhint attribute)",
+        "instructions": "Set the action label for the enter key on virtual keyboards.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "enter": "Enter: Typically inserting a new line.",
+            "done": "Done: Typically meaning there is nothing more to input and the input method editor will be closed.",
+            "go": "Go: Typically meaning to take the user to the target of the text they typed.",
+            "next": "Next: Typically taking the user to the next field that will accept text.",
+            "previous": "Previous: Typically taking the user to the previous field that will accept text.",
+            "search": "Search: Typically taking the user to the results of searching for the text they have typed.",
+            "send": "Send: Typically delivering the text to its target.",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "accessibility"
+    },
+    "exportparts": {
+        "display": "Shadow DOM Part Exports (exportparts attribute)",
+        "instructions": "Expose shadow DOM parts for styling from outside the component. List part names to export, separated by commas.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "advanced"
+    },
+    "form": {
+        "display": "Associated Form ID (form attribute)",
+        "instructions": "Associate this input with a specific form. Use this attribute to link inputs to forms outside their natural form container.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "form"
+    },
+    "formaction": {
+        "display": "Form Submission URL (formaction attribute)",
+        "instructions": "Override the form's action URL for this submit button. Use this attribute to send form data to a different endpoint when this specific button is clicked.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image,submit"
+        },
+        "section": "form"
+    },
+    "formenctype": {
+        "display": "Form Data Encoding Type (formenctype attribute)",
+        "instructions": "Override the form's encoding type for this submit button. Use this attribute to specify how form data should be encoded when submitted.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image,submit"
+        },
+        "section": "form"
+    },
+    "formmethod": {
+        "display": "Form Submission Method (formmethod attribute)",
+        "instructions": "Override the form's HTTP method for this submit button. Use this attribute to specify how form data should be sent (GET, POST, etc.).",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "dialog": "DIALOG",
+            "get": "GET",
+            "post": "POST",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image,submit"
+        },
+        "section": "form"
+    },
+    "formnovalidate": {
+        "display": "Bypass Form Validation (formnovalidate attribute)",
+        "instructions": "Disable form validation for this submit button. Use this attribute to bypass client-side validation when this specific button is clicked.",
+        "type": "toggle",
+        "default": false,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image,submit"
+        },
+        "section": "form"
+    },
+    "formtarget": {
+        "display": "Form Submission Target (formtarget attribute)",
+        "instructions": "Override the form's target for this submit button. Use this attribute to specify where the form response should be displayed.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image,submit"
+        },
+        "section": "form"
+    },
+    "height": {
+        "display": "Image Height (height attribute)",
+        "instructions": "Set the height of image input buttons. Use this attribute to specify the vertical size of the image when used as a submit button.",
+        "type": "integer",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image"
+        },
+        "section": "appearance"
+    },
+    "id": {
+        "display": "Unique Identifier (id attribute)",
+        "instructions": "Set a unique identifier for this element.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "identification"
+    },
+    "inert": {
+        "display": "Disable Interaction (inert attribute)",
+        "instructions": "Disable interaction with this element and its descendants. Use this attribute to prevent focus, clicks, and accessibility tree inclusion.",
+        "type": "toggle",
+        "default": false,
+        "validate": null,
+        "section": "behavior"
+    },
+    "inputmode": {
+        "display": "Input Mode (inputmode attribute)",
+        "instructions": "Set the type of virtual keyboard to display. Use this attribute to optimize the keyboard for specific input types like email, numeric, or search.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "none": "None: No virtual keyboard",
+            "text": "Text: Standard input keyboard for the user's current locale",
+            "decimal": "Decimal: Fractional numeric input keyboard containing the digits and decimal separator for the user's locale",
+            "numeric": "Numeric: Numeric input keyboard, but only requires the digits 0–9",
+            "tel": "Tel: A telephone keypad input, including the digits 0–9, the asterisk (*), and the pound (#) key",
+            "search": "Search: A virtual keyboard optimized for search input",
+            "email": "Email: A virtual keyboard optimized for entering email addresses",
+            "url": "URL: A keypad optimized for entering URLs",
+            "null": "Not Specified"
+        },
+        "internal": true,
+        "validate": null,
+        "section": "accessibility"
+    },
+    "is": {
+        "display": "Custom Element Name (is attribute)",
+        "instructions": "Specify that this element should behave like a custom built-in element. Use this attribute to extend standard HTML elements with custom behavior.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "advanced"
+    },
+    "itemid": {
+        "display": "Microdata Item ID (itemid attribute)",
+        "instructions": "Set a unique global identifier for this microdata item.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "microdata"
+    },
+    "itemprop": {
+        "display": "Microdata Item Property (itemprop attribute)",
+        "instructions": "Define a property of the microdata item.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "microdata"
+    },
+    "itemref": {
+        "display": "Microdata Item Reference (itemref attribute)",
+        "instructions": "Reference additional properties from other elements by their IDs. Use this attribute to associate properties that are not descendants of the current item.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "microdata"
+    },
+    "itemscope": {
+        "display": "Microdata Item Scope (itemscope attribute)",
+        "instructions": "Create a new microdata item scope. Use this attribute to define a group of related properties for structured data.",
+        "type": "toggle",
+        "default": false,
+        "validate": null,
+        "section": "microdata"
+    },
+    "itemtype": {
+        "display": "Microdata Item Type (itemtype attribute)",
+        "instructions": "Set the vocabulary URL for microdata properties. Use this attribute to specify the schema that defines the structure of your data.",
+        "type": "text",
+        "default": null,
+        "validate": [
+            "url"
+        ],
+        "section": "microdata"
+    },
+    "lang": {
+        "display": "Language (lang attribute)",
+        "instructions": "Set the language of this element using a BCP 47 language tag. Use this attribute to help screen readers and other tools provide correct pronunciation.",
+        "type": "hidden",
+        "default": null,
+        "validate": null,
+        "section": "accessibility"
+    },
+    "list": {
+        "display": "Datalist ID (list attribute)",
+        "instructions": "Reference a datalist for input suggestions. Use this attribute to connect this input to a datalist element that provides predefined options.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any color,date,datetime-local,email,file,image,month,number,range,reset,search,submit,tel,text,time,url,week"
+        },
+        "section": "suggestions"
+    },
+    "min": {
+        "display": "Minimum Value",
+        "instructions": "Set the minimum allowed value for this field.",
+        "type": "text",
+        "default": null,
+        "if": {
+            "input_type": "contains_any date,datetime-local,month,number,range,time,week"
+        },
+        "validate": null,
+        "section": "constraints"
+    },
+    "minlength": {
+        "display": "Minimum Input Length",
+        "instructions": "Set the minimum number of enterable characters.",
+        "type": "integer",
+        "default": null,
+        "if": {
+            "input_type": "contains_any email,password,search,tel,text,url"
+        },
+        "internal": true,
+        "validate": null,
+        "section": "constraints"
+    },
+    "max": {
+        "display": "Maximum Value",
+        "instructions": "Set the maximum allowed value for this field.",
+        "type": "text",
+        "default": null,
+        "if": {
+            "input_type": "contains_any date,datetime-local,month,number,range,time,week"
+        },
+        "internal": true,
+        "validate": null,
+        "section": "constraints"
+    },
+    "maxlength": {
+        "display": "Character Limit",
+        "instructions": "Set the maximum number of enterable characters.",
+        "type": "integer",
+        "default": null,
+        "if": {
+            "input_type": "contains_any email,password,search,tel,text,url"
+        },
+        "internal": true,
+        "validate": null,
+        "section": "constraints"
+    },
+    "multiple": {
+        "display": "Allow Multiple Values (multiple attribute)",
+        "instructions": "Allow multiple values to be selected. Use this attribute to enable users to select multiple files or email addresses in a single input.",
+        "type": "toggle",
+        "default": false,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any email,file"
+        },
+        "section": "behavior"
+    },
+    "name": {
+        "display": "Form Input Name (name)",
+        "instructions": "Set the name for this form control. Use this attribute to identify the input when the form is submitted and processed by the server.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "identification"
+    },
+    "nonce": {
+        "display": "Cryptographic Nonce (nonce attribute)",
+        "instructions": "Set a cryptographic nonce for Content Security Policy. Use this attribute to allowlist specific inline scripts or styles while avoiding unsafe-inline.",
+        "type": "hidden",
+        "default": null,
+        "validate": null,
+        "section": "advanced"
+    },
+    "part": {
+        "display": "Shadow DOM Part Name (part attribute)",
+        "instructions": "Set part names for shadow DOM styling. Use this attribute to allow CSS to select and style specific elements via the `::part` pseudo-element.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "advanced"
+    },
+    "pattern": {
+        "display": "Regular Expression Pattern (pattern attribute)",
+        "instructions": "Set a regular expression pattern that the input value must match.\n\nExample: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$` for email validation.",
+        "type": "text",
+        "default": null,
+        "if": {
+            "input_type": "contains_any email,password,search,tel,text,url"
+        },
+        "validate": null,
+        "internal": true,
+        "section": "constraints"
+    },
+    "popover": {
+        "display": "Popover Behavior (popover attribute)",
+        "instructions": "Designate this element as a popover.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "auto": "Auto State: popovers can be \"light dismissed\"",
+            "manual": "Manual State: popover cannot be \"light dismissed\", although declarative show/hide/toggle buttons will still work",
+            "hint": "Hint State: popover does not close `auto` popovers when they are displayed, but will close other `hint` popovers",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "behavior"
+    },
+    "popovertarget": {
+        "display": "Popover Target ID (popovertarget attribute)",
+        "instructions": "Reference a popover element to control. Use this attribute to specify which popover this button should show, hide, or toggle.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any button"
+        },
+        "section": "behavior"
+    },
+    "popovertargetaction": {
+        "display": "Popover Action (popovertargetaction attribute)",
+        "instructions": "Set the action for popover control. Use this attribute to specify whether this button should show, hide, or toggle the target popover.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "hide": "Hide: The button will hide a shown popover",
+            "show": "Show: The button will show a hidden popover",
+            "toggle": "Toggle: The button will toggle a popover between showing and hidden",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "if": {
+            "input_type": "contains_any button"
+        },
+        "section": "behavior"
+    },
+    "role": {
+        "display": "ARIA Role (role attribute)",
+        "instructions": "Set an ARIA role to define the element's purpose for assistive technologies. Use this attribute to improve accessibility and semantic meaning.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "accessibility"
+    },
+    "size": {
+        "display": "Visible Width (size attribute)",
+        "instructions": "Set the visible width of text inputs. Use this attribute to control how many characters are visible in the input field at once.",
+        "type": "integer",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any email,password,search,tel,text,url"
+        },
+        "section": "appearance"
+    },
+    "slot": {
+        "display": "Shadow DOM Slot Name (slot attribute)",
+        "instructions": "Assign this element to a named slot in a shadow DOM. Use this attribute to control where content appears in web components.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "advanced"
+    },
+    "spellcheck": {
+        "display": "Enable Spell Checking (spellcheck attribute)",
+        "instructions": "Enable or disable browser spell checking for this field.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "true": "True",
+            "false": "False",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "accessibility"
+    },
+    "src": {
+        "display": "Image Source (src attribute)",
+        "instructions": "Set the image source for image inputs. Use this attribute to specify the URL of the image that will be used as a submit button.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image"
+        },
+        "section": "appearance"
+    },
+    "step": {
+        "display": "Step Interval (step attribute)",
+        "instructions": "Set the step interval for this field.",
+        "type": "float",
+        "default": null,
+        "if": {
+            "input_type": "contains_any date,datetime-local,month,number,range,time,week"
+        },
+        "validate": [
+            "gt:0"
+        ],
+        "section": "constraints"
+    },
+    "style": {
+        "display": "Inline CSS Styles (style attribute)",
+        "instructions": "Add inline CSS styles to this element. Use this attribute for quick or test styling, but prefer external stylesheets for maintainability.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "appearance"
+    },
+    "tabindex": {
+        "display": "Tab Order (tabindex attribute)",
+        "instructions": "Set the tab order for keyboard navigation. Use this attribute to make this element focusable and control its position in the tab sequence.",
+        "type": "integer",
+        "default": null,
+        "validate": null,
+        "section": "accessibility"
+    },
+    "title": {
+        "display": "Tooltip (title attribute)",
+        "instructions": "Add advisory text for this element. Use this attribute to provide extra information, shown as a tooltip in most browsers.",
+        "type": "text",
+        "default": null,
+        "validate": null,
+        "section": "accessibility"
+    },
+    "translate": {
+        "display": "Automatic Translation (translate attribute)",
+        "instructions": "Control whether this element's content is translated. Use this attribute to allow or prevent automatic translation by browsers and tools.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "yes": "Yes",
+            "no": "No",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "accessibility"
+    },
+    "input_type": {
+        "display": "Input Type",
+        "type": "hidden",
+        "default": "text",
+        "validate": null,
+        "section": "value_and_state"
+    },
+    "calculation_query": {
+        "display": "Enable Dynamic Default Value",
+        "instructions": "Pre-populate the field with contextual or dynamic data based on the current page, user, or other factors.",
+        "type": "toggle",
+        "section": "value_and_state"
+    },
+    "calculation_type": {
+        "display": "Dynamic Default Value Type",
+        "instructions": "Dynamic **math** values only use numbers in the calculation, and any included math operations will be applied. Dynamic **text** values are combined literally.",
+        "type": "radio",
+        "options": {
+            "math": "Math",
+            "text": "Text"
+        },
+        "default": "math",
+        "if": {
+            "input_type": "contains_any button,checkbox,color,date,datetime-local,email,file,hidden,month,number,password,radio,range,reset,search,submit,tel,text,time,url,week",
+            "calculation_query": "equals true"
+        },
+        "section": "value_and_state"
+    },
+    "calculation_formula": {
+        "display": "Calculation Formula",
+        "type": "code",
+        "mode": "javascript",
+        "mode_selectable": false,
+        "visibility": "hidden",
+        "section": "value_and_state"
+    },
+    "calculation_formula_math": {
+        "display": "Dynamic Default Value Calculation Formula",
+        "instructions": "Enter a math expression that calculates the value. Formulas are evaluated by a sandboxed math engine (mathjs), no arbitrary JavaScript runs.\n\n**Field References:** Use the field handle wrapped in square brackets to reference other field values (e.g., `[price]`, `[quantity]`, `[tax_rate]`).\n\n**URL Parameters:** Use `[get_param:param_name]` to reference URL parameters from the current page (e.g., `[get_param:quantity]`) if they return numeric values.\n\n**Common Operators:**\n- `+` Addition: `[price] + [tax]`\n- `-` Subtraction: `[total] - [discount]`\n- `*` Multiplication: `[price] * [quantity]`\n- `/` Division: `[total] / [items]`\n- `%` Modulo: `[total] % 10` (follows the divisor's sign, e.g. `-1 % 3` is `2`)\n- `^` Exponentiation: `[base] ^ 2`\n- `()` Grouping: `([price] + [tax]) * [quantity]`\n\n**Math Functions:**\n- `Math.round()` Round to nearest integer, halves away from zero: `Math.round([price] * 1.1)`\n- `Math.floor()` Round down to integer: `Math.floor([total] / 100)`\n- `Math.ceil()` Round up to integer: `Math.ceil([amount] / 10)`\n- `Math.abs()` Absolute value: `Math.abs([profit] - [loss])`\n- `Math.min()` Minimum of values: `Math.min([price1], [price2])`\n- `Math.max()` Maximum of values: `Math.max([value1], [value2])`\n\n**Examples:**\n- `[price] * [quantity]` (subtotal)\n- `[price] * [get_param:quantity]` (subtotal based on URL parameter)\n- `[subtotal] * ([tax_rate] / 100)` (tax amount)\n- `[subtotal] + [tax_amount]` (total)\n- `Math.round(([price] * [quantity]) * 1.08)` (with tax)",
+        "type": "code",
+        "mode": "javascript",
+        "mode_selectable": false,
+        "if": {
+            "calculation_query": "equals true",
+            "calculation_type": "equals math"
+        },
+        "section": "value_and_state"
+    },
+    "calculation_formula_text": {
+        "display": "Dynamic Default Value Text",
+        "instructions": "Enter the text in the manner you would like it to be displayed.\n\n**Field References:** Use the field handle wrapped in square brackets to reference other field values (e.g., `[order_number]`, `[item_count]`, `[first_name]`).\n\n**URL Parameters:** Use `[get_param:param_name]` to reference URL parameters from the current page (e.g., `[get_param:editor_email_address]`).\n\n**Examples:**\n- `Order #[order_number] - [customer_name]` to display a value like \"Order #123456 - John Doe\"\n- `Total: $[amount] for [item_count] items` to display a value like \"Total: $12.34 for 5 items\"\n- `[first_name] [last_name]` to display a value like \"John Doe\"\n- `[get_param:editor_email_address]` to display a value like \"user@example.com\" (from URL parameter)",
+        "type": "code",
+        "mode": "handlebars",
+        "mode_selectable": false,
+        "if": {
+            "calculation_query": "equals true",
+            "calculation_type": "equals text"
+        },
+        "section": "value_and_state"
+    },
+    "calculation_decimals": {
+        "display": "Decimal Places of Calculated Value",
+        "instructions": "Number of decimal places to display",
+        "type": "integer",
+        "if": {
+            "calculation_query": "equals true",
+            "calculation_type": "equals math"
+        },
+        "section": "value_and_state"
+    },
+    "default": {
+        "display": "Default Value",
+        "instructions": "Value to be stored if this field is left empty.",
+        "type": "text",
+        "default": null,
+        "if": {
+            "input_type": "contains_any button,checkbox,color,date,datetime-local,email,file,hidden,month,number,password,radio,range,reset,search,submit,tel,text,time,url,week",
+            "calculation_query": "equals false"
+        },
+        "validate": null,
+        "section": "value_and_state"
+    },
+    "placeholder": {
+        "display": "Placeholder",
+        "instructions": "Set placeholder text.",
+        "type": "text",
+        "default": null,
+        "if": {
+            "input_type": "contains_any email,number,password,search,tel,text,url",
+            "calculation_query": "not true"
+        },
+        "validate": null,
+        "section": "value_and_state"
+    },
+    "virtualkeyboardpolicy": {
+        "display": "Virtual Keyboard Policy (virtualkeyboardpolicy attribute)",
+        "instructions": "Control virtual keyboard behavior on mobile devices.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "auto": "Auto: automatically show the virtual keyboard when the element is focused or tapped",
+            "manual": "Manual: decouple focus and tap on the element from the virtual keyboard's state",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "experimental"
+    },
+    "width": {
+        "display": "Image Width (width attribute)",
+        "instructions": "Set the width of image input buttons. Use this attribute to specify the horizontal size of the image when used as a submit button.",
+        "type": "integer",
+        "default": null,
+        "validate": null,
+        "if": {
+            "input_type": "contains_any image"
+        },
+        "section": "appearance"
+    },
+    "writingsuggestions": {
+        "display": "Writing Suggestions (writingsuggestions attribute)",
+        "instructions": "Enable or disable browser writing suggestions. Use this attribute to control whether the browser provides text completion suggestions.",
+        "type": "select",
+        "default": "null",
+        "options": {
+            "true": "True",
+            "false": "False",
+            "null": "Not Specified"
+        },
+        "validate": null,
+        "section": "accessibility"
+    }
+}

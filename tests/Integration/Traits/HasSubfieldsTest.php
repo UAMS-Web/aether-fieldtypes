@@ -744,8 +744,10 @@ it('lists under a subfield only the config fields whose key starts with its hand
     $keys = array_keys(hasSubfieldsConfigGroup($harness));
     $zipSection = array_slice($keys, array_search('section_zip', $keys, true) + 1, 3);
 
+    $positions = array_flip($keys);
+
     expect($zipSection)->toBe(['zip_include', 'zip_required', 'zip_label'])
-        ->and(array_search('section_zipcode', $keys, true))->toBeGreaterThan(array_search('zip_default', $keys, true));
+        ->and($positions['section_zipcode'])->toBeGreaterThan($positions['zip_default']);
 });
 
 it('leaves out a subfield whose every config field is hidden', function (): void {
