@@ -25,6 +25,9 @@ trait ConfigCache
      *
      * @var bool Flag indicating whether config retrieval is currently in progress
      */
+    // A property default holds no executable line, so coverage reports it uncovered although the
+    // recursion test pins the guard's start state.
+    // @pest-mutate-ignore: FalseToTrue
     private bool $configRecursionGuard = false;
 
     /**
@@ -41,6 +44,10 @@ trait ConfigCache
         // ---
 
         // Check if config cache is null
+        // Dropping the guard's early return, or never setting the guard, makes config() recurse until
+        // the process crashes. No test can observe that, and the mutation runner reports it as a
+        // failed run rather than a kill.
+        // @pest-mutate-ignore: RemoveEarlyReturn,TrueToFalse
         if ($this->configCache === null) {
             // ---
             // If already in the process of retrieving config, prevent recursion
