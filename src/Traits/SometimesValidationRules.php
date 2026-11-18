@@ -26,7 +26,12 @@ trait SometimesValidationRules
      */
     protected function normalizeBlueprintValidateForSometimes(mixed $validate): mixed
     {
+        // The guard is a shortcut: Statamic's explodeRules() turns every empty value into [], and the
+        // branches below then hand back the input (null and the empty string) or that empty list.
+        // @pest-mutate-ignore: RemoveArrayItem,EmptyStringToNotEmpty
         if (in_array($validate, [null, '', []], true)) {
+            // Without this return the same value comes back from the branches below.
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return $validate === null || $validate === '' ? $validate : [];
         }
 
@@ -34,6 +39,8 @@ trait SometimesValidationRules
 
         if (! $this->explodedValidateRulesContain($rules, 'sometimes')) {
             if (\is_array($validate)) {
+                // explodeRules() returns a list unchanged, so $validate and $rules are the same list here.
+                // @pest-mutate-ignore: RemoveEarlyReturn
                 return $rules;
             }
 
@@ -41,6 +48,8 @@ trait SometimesValidationRules
             return $validate;
         }
 
+        // array_merge renumbers integer keys, so dropping array_values changes nothing observable.
+        // @pest-mutate-ignore: UnwrapArrayValues
         $rest = array_values(array_filter(
             $rules,
             static fn (mixed $rule): bool => $rule !== 'sometimes'
@@ -63,6 +72,8 @@ trait SometimesValidationRules
             $exploded = $this->explodeStatamicValidationRules($rules);
             $out[$key] = array_merge(
                 ['sometimes'],
+                // array_merge renumbers integer keys, so dropping array_values changes nothing observable.
+                // @pest-mutate-ignore: UnwrapArrayValues
                 array_values(array_filter(
                     $exploded,
                     static fn (mixed $rule): bool => $rule !== 'sometimes'
