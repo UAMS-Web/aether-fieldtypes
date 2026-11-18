@@ -5,6 +5,8 @@ declare(strict_types=1);
 use UAMSWeb\Aether\Fieldtypes\Ownership\Claim;
 use UAMSWeb\Aether\Fieldtypes\Ownership\OwnerMap;
 
+covers(Claim::class, OwnerMap::class);
+
 /**
  * Owner map: a name claimed by two packages is reported, and one claimed by a single package
  * is not.
@@ -70,4 +72,17 @@ it('keeps a handle and a component name of the same spelling apart', function ()
 
     // Expect no conflict, since the two kinds are separate namespaces
     expect($map->conflicts())->toBe([]);
+});
+
+it('reports numeric names and owners as strings, which PHP would otherwise turn into integers', function (): void {
+    // Two packages named and claiming with digits only
+    $map = new OwnerMap([
+        new Claim('1', Claim::FIELDTYPE, '2'),
+        new Claim('3', Claim::FIELDTYPE, '2'),
+    ]);
+
+    // Expect strings throughout, since an array key of digits is stored as an integer
+    expect($map->conflicts())->toBe([
+        ['kind' => Claim::FIELDTYPE, 'name' => '2', 'owners' => ['1', '3']],
+    ]);
 });

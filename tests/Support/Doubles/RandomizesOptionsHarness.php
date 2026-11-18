@@ -11,12 +11,12 @@ use UAMSWeb\Aether\Fieldtypes\Traits\RandomizesOptions;
  * A fieldtype using the RandomizesOptions trait whose preset options are the
  * letters a to j in order.
  */
-final class RandomizesOptionsHarness extends Fieldtype
+class RandomizesOptionsHarness extends Fieldtype
 {
     use RandomizesOptions;
 
     /** @return array<array-key, mixed> */
-    private function getOptionsWithPreset(): array
+    protected function getOptionsWithPreset(): array
     {
         return range('a', 'j');
     }

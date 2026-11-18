@@ -41,9 +41,8 @@ it('is discovered by the host, which resolves the public Alpine entry inside the
 });
 
 it('renders a form partial that marks the elements a test-only engine binds to', function (): void {
-    // Render a partial from a host's own view path, which names the engine by attribute
-    View::addLocation(__DIR__.'/../Support/views');
-    $html = view('engine-partial', ['engine' => 'quantity'])->render();
+    // Render a partial from a host's own views, which names the engine by attribute
+    $html = View::file(__DIR__.'/../Support/views/engine-partial.blade.php', ['engine' => 'quantity'])->render();
 
     // Expect the marker the test-only engine's selector matches
     expect($html)->toContain('data-test-engine="quantity"');

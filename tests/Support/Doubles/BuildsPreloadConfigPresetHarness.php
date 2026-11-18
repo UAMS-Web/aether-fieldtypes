@@ -8,10 +8,10 @@ namespace UAMSWeb\Aether\Fieldtypes\Tests\Support\Doubles;
  * {@see BuildsPreloadConfigHarness} with a getPresets() returning $presets, and a
  * modifyPreloadConfig() that merges $preloadModifications into the config.
  */
-final class BuildsPreloadConfigPresetHarness extends BuildsPreloadConfigHarness
+class BuildsPreloadConfigPresetHarness extends BuildsPreloadConfigHarness
 {
     /** @return array<array-key, mixed> */
-    private function getPresets(): array
+    protected function getPresets(): array
     {
         return $this->presets;
     }

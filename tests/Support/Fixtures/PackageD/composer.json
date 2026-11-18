@@ -1,0 +1,10 @@
+{
+    "name": "fixture/d",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "UAMSWeb\\Aether\\Fieldtypes\\Tests\\Support\\Fixtures\\PackageD\\PackageDProvider"
+            ]
+        }
+    }
+}

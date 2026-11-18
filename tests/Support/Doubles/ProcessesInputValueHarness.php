@@ -15,7 +15,7 @@ use UAMSWeb\Aether\Fieldtypes\Traits\ProcessesInputValue;
  * which path ran and whether the config was normalized first. passThrough() reaches the trait's own
  * normalizeValue().
  */
-final class ProcessesInputValueHarness extends Fieldtype
+class ProcessesInputValueHarness extends Fieldtype
 {
     use InputMaskValueStorage;
     use ProcessesInputValue {
@@ -26,7 +26,7 @@ final class ProcessesInputValueHarness extends Fieldtype
      * @param  array<string, mixed>  $config
      * @return array<string, mixed>
      */
-    private function normalizeConfigWithDefaults(array $config): array
+    protected function normalizeConfigWithDefaults(array $config): array
     {
         return [...$config, 'defaulted' => true];
     }
