@@ -69,7 +69,16 @@ jobs:
     if: vars.RUN_REMOTE_CI != 'false'
     with:
       linux-only: true
-      mutate-paths: src
+      # A git pathspec list: the chain runs `git diff -- $MUTATE_PATHS` to pick the changed files of a
+      # pull request or a push, so an `:(exclude)` entry leaves one file out. The three traits are
+      # copied from the site with almost no mutation coverage (UAMS-Web/aether-fieldtypes#9 hardens
+      # them); every other changed file in `src` still needs 100%. A scheduled or dispatched run
+      # mutates everything `composer mutate` covers and ignores this input.
+      mutate-paths: >-
+        src
+        :(exclude)src/Traits/DefinesInputConfigFields.php
+        :(exclude)src/Traits/HasSubfields.php
+        :(exclude)src/Traits/SometimesValidationRules.php
 
   # Not in the chain: the repository's decision log has an order a person can break by hand.
   decision-log:
