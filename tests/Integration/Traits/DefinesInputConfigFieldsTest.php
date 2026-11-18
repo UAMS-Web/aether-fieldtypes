@@ -235,6 +235,18 @@ it('groups fields by section in the fixed order and leaves empty sections out', 
         ->and($out[3])->toBe(['fields' => ['c' => ['type' => 'hidden', 'section' => 'form']]]);
 });
 
+it('puts a field whose section is not a string in the behavior section', function (): void {
+    $harness = new DefinesInputConfigFieldsHarness;
+
+    // A loose match would find `true` among the section names and file the field under key 1.
+    $out = $harness->groupConfigFieldsIntoSections([
+        'a' => ['type' => 'text', 'section' => true],
+    ]);
+
+    expect(array_column($out, 'display'))->toBe(['Input Behavior'])
+        ->and(array_keys(definesInputFields($out)))->toBe(['a']);
+});
+
 it('describes each section with its display and instructions', function (): void {
     $harness = new DefinesInputConfigFieldsHarness;
     $sections = [
@@ -351,6 +363,15 @@ it('builds the preset selector from the options, labelling a preset by its label
         ]);
 });
 
+it('labels an unlabelled preset with an integer key by that key as a string', function (): void {
+    $harness = new DefinesInputConfigFieldsHarness;
+    $harness->presets = ['options' => [7 => []]];
+
+    $out = $harness->applyPresetToConfigFields([['display' => 'A', 'fields' => ['min' => ['type' => 'text']]]]);
+
+    expect(definesInputFields($out)['preset']['options'])->toBe([7 => '7']);
+});
+
 it('takes the selector display and instructions from the presets when they give them', function (): void {
     $harness = new DefinesInputConfigFieldsHarness;
     $harness->presets = ['display' => 'Kind', 'instructions' => 'Pick one.', 'options' => ['a' => ['label' => 'A']]];
@@ -439,6 +460,26 @@ it('ignores a selected preset that is not a scalar', function (): void {
     $out = $harness->applyPresetToConfigFields([['fields' => ['min' => ['type' => 'text']]]]);
 
     expect(definesInputFields($out)['min'])->toBe(['type' => 'text']);
+});
+
+it('reads a selected preset of false as the empty key, not as the first option', function (): void {
+    $harness = new DefinesInputConfigFieldsHarness;
+    $harness->presets = ['options' => [['label' => 'First', 'config' => ['min' => 1]]]];
+    $harness->useConfig(['preset' => false]);
+
+    $out = $harness->applyPresetToConfigFields([['fields' => ['min' => ['type' => 'text']]]]);
+
+    expect(definesInputFields($out)['min'])->toBe(['type' => 'text']);
+});
+
+it('reads a selected preset that is not a scalar as the empty key', function (): void {
+    $harness = new DefinesInputConfigFieldsHarness;
+    $harness->presets = ['options' => ['' => ['label' => 'None', 'config' => ['min' => 1]]]];
+    $harness->useConfig(['preset' => ['a']]);
+
+    $out = $harness->applyPresetToConfigFields([['fields' => ['min' => ['type' => 'text']]]]);
+
+    expect(definesInputFields($out)['min'])->toBe(['type' => 'text', 'default' => 1, 'visibility' => 'hidden']);
 });
 
 it('reads a numeric selected preset as its string key', function (): void {

@@ -742,12 +742,24 @@ it('lists under a subfield only the config fields whose key starts with its hand
     $harness->presetConditions = [];
 
     $keys = array_keys(hasSubfieldsConfigGroup($harness));
-    $zipSection = array_slice($keys, array_search('section_zip', $keys, true) + 1, 3);
 
-    $positions = array_flip($keys);
-
-    expect($zipSection)->toBe(['zip_include', 'zip_required', 'zip_label'])
-        ->and($positions['section_zipcode'])->toBeGreaterThan($positions['zip_default']);
+    // A key written again keeps its first position, so a `zipcode_` key gathered under `zip`
+    // would stay ahead of `section_zipcode`: pin the whole order, not only the first keys.
+    expect($keys)->toBe([
+        'preset',
+        'section_zip',
+        'zip_include',
+        'zip_required',
+        'zip_label',
+        'zip_placeholder',
+        'zip_default',
+        'section_zipcode',
+        'zipcode_include',
+        'zipcode_required',
+        'zipcode_label',
+        'zipcode_placeholder',
+        'zipcode_default',
+    ]);
 });
 
 it('leaves out a subfield whose every config field is hidden', function (): void {

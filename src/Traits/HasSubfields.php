@@ -636,7 +636,8 @@ trait HasSubfields
                     // Found at least one visible field
                     $hasVisible = true;
 
-                    // No need to check further
+                    // No need to check further. Equivalent as continue: nothing resets $hasVisible.
+                    // @pest-mutate-ignore: BreakToContinue
                     break;
                 }
             }
