@@ -28,8 +28,11 @@ trait SometimesValidationRules
     {
         // The guard is a shortcut: Statamic's explodeRules() turns every empty value into [], and the
         // branches below then hand back the input (null and the empty string) or that empty list.
+        // The test is its own statement so this annotation reaches only its list, not the return below.
         // @pest-mutate-ignore: RemoveArrayItem,EmptyStringToNotEmpty
-        if (in_array($validate, [null, '', []], true)) {
+        $isEmpty = in_array($validate, [null, '', []], true);
+
+        if ($isEmpty) {
             // Without this return the same value comes back from the branches below.
             // @pest-mutate-ignore: RemoveEarlyReturn
             return $validate === null || $validate === '' ? $validate : [];

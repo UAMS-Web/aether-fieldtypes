@@ -210,8 +210,11 @@ final class OwnerMap
         $vite = $defaults['vite'] ?? null;
 
         // A provider's `$vite` is typed to hold `input` whenever it is an array, so either test alone decides.
+        // The test is its own statement so this annotation reaches only it, not the filter below.
         // @pest-mutate-ignore: BooleanAndToBooleanOr
-        if (is_array($vite) && is_array($vite['input'] ?? null)) {
+        $declaresInput = is_array($vite) && is_array($vite['input'] ?? null);
+
+        if ($declaresInput) {
             $paths = array_filter($vite['input'], fn (mixed $path): bool => is_string($path) && str_ends_with($path, '.js'));
         }
 
