@@ -184,6 +184,21 @@ jobs:
       # Dependency-free, so it needs PHP and nothing else.
       - run: composer test:parallel-safe
 
+  # Not in the chain: the chain's `mutate-ignore` job reads each marker's text, and this one
+  # measures how many mutants each marker removes with the installed plugin, so it needs the
+  # Composer install. It fails on a marker that removes none, or more than one mutant of a
+  # mutator it names, unless `tests/mutate-ignore-breadth.baseline.json` records it.
+  mutate-ignore-breadth:
+    name: Mutate-ignore breadth
+    runs-on: ubuntu-latest
+    # Budget kill-switch: see the RUN_REMOTE_CI note in the header.
+    if: vars.RUN_REMOTE_CI != 'false'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - run: composer test:mutate-ignore-breadth
+
   # The add-on promises `statamic/cms` at its `composer.json` constraint and PHP ^8.4, and every
   # job above runs one combination. These legs run the dependency-sensitive checks (Larastan and
   # Pest) against the others:
@@ -243,7 +258,7 @@ jobs:
   # otherwise fail on those skips and block every merge, where the switch means "nothing ran".
   ci:
     name: CI
-    needs: [checks, decision-log, audit, scripts, built-assets, parallel-safe, compatibility-lowest, compatibility-php85]
+    needs: [checks, decision-log, audit, scripts, built-assets, parallel-safe, mutate-ignore-breadth, compatibility-lowest, compatibility-php85]
     if: always() && vars.RUN_REMOTE_CI != 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 5
