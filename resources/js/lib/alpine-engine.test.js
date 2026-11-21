@@ -66,6 +66,19 @@ describe('registerAlpineEngine', () => {
 			expect(init).toHaveBeenCalledWith(el);
 		});
 
+		it('waits for alpine:initialized while the page parses even when Alpine is imported', () => {
+			// A classic script can run mid-parse with `window.Alpine` set and no `x-data` element parsed yet
+			const { listeners, document } = fakeDocument('loading');
+			vi.stubGlobal('document', document);
+			vi.stubGlobal('window', { Alpine: { version: '3.0.0' } });
+			const init = vi.fn();
+
+			registerAlpineEngine({ selector: '[data-x]', boundAttr: 'xBound', init });
+
+			expect(init).not.toHaveBeenCalled();
+			expect(typeof listeners['alpine:initialized']).toBe('function');
+		});
+
 		it('waits for alpine:initialized when Alpine is imported but start() has not run', () => {
 			// `Alpine.version` is set at import, so a host that registers an engine and calls
 			// `Alpine.start()` in a later module sees it set while the tree is still uninitialized.

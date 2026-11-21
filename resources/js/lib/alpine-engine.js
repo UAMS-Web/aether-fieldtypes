@@ -32,18 +32,23 @@
  */
 
 /**
- * Whether Alpine has finished initializing the page's tree.
+ * Whether Alpine has begun initializing the page's tree.
  *
  * `Alpine.version` is set when the module is imported, so it proves nothing about
  * start order. Alpine marks each `x-data` element with `_x_dataStack` while it
  * initializes the tree, so the first such element carrying it is the signal that
- * `Alpine.start()` has run. A page with no `x-data` element has nothing to wait
- * for, and an early bind is harmless there.
+ * `Alpine.start()` has run. That is "begun", not "finished": the mark is set
+ * before `alpine:initialized` fires. While the page is still parsing the answer is
+ * always no, because the document may not hold the `x-data` element yet. A complete
+ * page with no `x-data` element has nothing to wait for, so an early bind is
+ * harmless there. Only the first `x-data` element is consulted; registering in the
+ * gap between a host inserting a new first `x-data` element and Alpine reaching it
+ * is not covered.
  *
  * @returns {boolean}
  */
 function alpineHasStarted() {
-	if (!window.Alpine) return false;
+	if (document.readyState === 'loading' || !window.Alpine) return false;
 
 	const root = document.querySelector('[x-data]');
 
@@ -52,12 +57,13 @@ function alpineHasStarted() {
 
 /**
  * Register a per-element Alpine engine. Safe to call from a module's top
- * level, before or after `Alpine.start()`; binding waits until Alpine has
- * initialized the tree.
+ * level, while the page parses and before or after `Alpine.start()`; binding
+ * waits until Alpine has begun initializing the tree.
  *
  * One element whose `init` throws does not stop the others: the error is logged
  * with the selector, the element is left unbound so a later `bind()` retries it,
- * and the scan continues. Elements inserted after Alpine started are not bound
+ * and the scan continues. Because a retry runs `init` again, `init` should be
+ * idempotent or throw before it attaches listeners or watchers. Elements inserted after Alpine started are not bound
  * on their own; call the returned `bind()` after inserting them.
  *
  * @param {RegisterAlpineEngineOptions} options
