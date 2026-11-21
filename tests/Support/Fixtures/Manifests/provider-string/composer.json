@@ -1,0 +1,7 @@
+{
+    "extra": {
+        "laravel": {
+            "providers": "UAMSWeb\\Aether\\Fieldtypes\\Tests\\Support\\Fixtures\\PackageC\\PackageCProvider"
+        }
+    }
+}

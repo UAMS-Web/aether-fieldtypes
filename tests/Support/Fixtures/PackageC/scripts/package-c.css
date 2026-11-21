@@ -1,1 +1,2 @@
 /* Statamic.$components.register("not-a-script-component", {}) */
+Statamic.component('css-never', {})
