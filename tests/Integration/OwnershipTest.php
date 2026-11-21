@@ -231,7 +231,22 @@ it('reads several packages from their manifests and finds the name two of them r
  */
 function unreadableDescribe(array $unreadable): array
 {
-    return array_map(fn (Unreadable $item): string => $item->owner.'|'.$item->subject.'|'.$item->reason, $unreadable);
+    return array_map(fn (Unreadable $item): string => $item->owner.'|'.unreadableSubject($item).'|'.$item->reason, $unreadable);
+}
+
+/**
+ * The subject of a finding, with the platform's directory separator in a leading file path written as `/`.
+ */
+function unreadableSubject(Unreadable $item): string
+{
+    // A subject without `: ` is a class name or a manifest path, which is left as written
+    if (! str_contains($item->subject, ': ')) {
+        return $item->subject;
+    }
+
+    [$file, $rest] = explode(': ', $item->subject, 2);
+
+    return str_replace(DIRECTORY_SEPARATOR, '/', $file).': '.$rest;
 }
 
 it('claims component names registered in modules the entry imports, by every import form it follows', function (): void {
@@ -379,7 +394,7 @@ it('fails the assertion when a registration was unreadable, naming it', function
 
     expect($thrown)->toBeInstanceOf(OwnershipUnreadable::class)
         ->and($thrown?->unreadable)->toBe($map->unreadable())
-        ->and($thrown?->getMessage())->toContain('fixture/f: scripts/entry.js: import(path) (a dynamic import with a computed path cannot be followed)')
+        ->and($thrown?->getMessage())->toContain('fixture/f: scripts'.DIRECTORY_SEPARATOR.'entry.js: import(path) (a dynamic import with a computed path cannot be followed)')
         ->and($thrown?->getMessage())->toContain('; ');
 });
 
@@ -446,7 +461,7 @@ it('shortens a long excerpt to sixty characters and trims the space it may end o
     );
 
     // Expect exactly sixty characters of the first, and the second cut after its last non-space character
-    expect(array_map(fn (Unreadable $item): string => $item->subject, $map->unreadable()))->toBe([
+    expect(array_map(unreadableSubject(...), $map->unreadable()))->toBe([
         'scripts/entry.js: Statamic.component('.str_repeat('n', 41),
         'scripts/entry.js: Statamic.component('.str_repeat('a', 40),
     ]);

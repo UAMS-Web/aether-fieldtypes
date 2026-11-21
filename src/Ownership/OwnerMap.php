@@ -377,7 +377,8 @@ final class OwnerMap
         // Only the key is read, so the stored value makes no difference.
         // @pest-mutate-ignore: TrueToFalse
         $visited[$real] = true;
-        $label = ltrim(str_replace([$base, '\\'], ['', '/'], $real), '/');
+        // The file's path inside the package, written with the platform's separator, for a report
+        $label = ltrim(substr($real, strlen($base)), DIRECTORY_SEPARATOR);
         $contents = file_get_contents($real);
 
         // A file that was just resolved fails to read only for a permission or locking reason, which a test cannot raise on every platform.
