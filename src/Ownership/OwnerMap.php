@@ -37,11 +37,8 @@ final class OwnerMap
     /** Extensions of the files the scan reads as scripts, and resolves an import to as written. */
     private const array CODE_EXTENSIONS = ['js', 'mjs', 'cjs', 'jsx', 'ts', 'tsx', 'vue'];
 
-    /** Extensions of the files an import names that hold no script, which the scan passes over. */
-    private const array ASSET_EXTENSIONS = [
-        'css', 'scss', 'sass', 'less', 'styl', 'svg', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'ico', 'bmp',
-        'json', 'woff', 'woff2', 'ttf', 'otf', 'eot', 'mp3', 'mp4', 'webm', 'ogg', 'wav', 'html', 'txt', 'md', 'wasm', 'map',
-    ];
+    /** An import that ends in one of these names a file that holds no script, which the scan passes over. */
+    private const string ASSET_PATTERN = '~\.(?:css|scss|sass|less|styl|svg|png|jpe?g|gif|webp|avif|ico|bmp|json|woff2?|ttf|otf|eot|mp[34]|webm|ogg|wav|html|txt|md|wasm|map)$~i';
 
     /**
      * @param  list<Claim>  $claims  Every claim made by the packages under inspection.
@@ -263,7 +260,7 @@ final class OwnerMap
         $contents = file_get_contents($file);
 
         // A manifest that exists fails to read only for a permission or locking reason, which a test cannot raise on every platform.
-        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn
+        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn,RemoveArrayItem
         if ($contents === false) {
             return [[], [new Unreadable($package, $file, 'the manifest could not be read')]];
         }
@@ -431,7 +428,7 @@ final class OwnerMap
         // A string literal is matched first at each position, so a `/*` or `//` inside one is not a comment
         $pattern = '~("(?:[^"\\\\\r\n]|\\\\.)*"|\'(?:[^\'\\\\\r\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`)|/\*.*?\*/|//[^\r\n]*~s';
 
-        return preg_replace_callback($pattern, fn (array $match): string => isset($match[1]) ? $match[0] : ' ', $source) ?? $source;
+        return preg_replace_callback($pattern, fn (array $match): string => $match[1] ?? ' ', $source) ?? $source;
     }
 
     /**
@@ -489,7 +486,7 @@ final class OwnerMap
         return array_values(array_unique(array_filter(
             [...$static[1], ...$dynamic[2]],
             fn (string $specifier): bool => preg_match('~^\.{1,2}/~', $specifier) === 1
-                && ! in_array(strtolower(pathinfo($specifier, PATHINFO_EXTENSION)), self::ASSET_EXTENSIONS, true),
+                && preg_match(self::ASSET_PATTERN, $specifier) !== 1,
         )));
     }
 

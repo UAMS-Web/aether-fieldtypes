@@ -1,0 +1,1 @@
+Statamic.component('legacy-cjs', {})
