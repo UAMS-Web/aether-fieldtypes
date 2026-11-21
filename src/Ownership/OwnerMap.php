@@ -254,25 +254,25 @@ final class OwnerMap
         $file = $directory.'composer.json';
 
         if (! is_file($file)) {
-            return [[], [new Unreadable($package, $file, 'the manifest does not exist')]];
+            return self::noProviders($package, $file, 'the manifest does not exist');
         }
 
         $contents = file_get_contents($file);
 
         // A manifest that exists fails to read only for a permission or locking reason, which a test cannot raise on every platform.
-        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn,RemoveArrayItem
+        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn
         if ($contents === false) {
-            return [[], [new Unreadable($package, $file, 'the manifest could not be read')]];
+            return self::noProviders($package, $file, 'the manifest could not be read');
         }
 
         $manifest = json_decode($contents, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return [[], [new Unreadable($package, $file, 'the manifest is not valid JSON: '.json_last_error_msg())]];
+            return self::noProviders($package, $file, 'the manifest is not valid JSON: '.json_last_error_msg());
         }
 
         if (! is_array($manifest)) {
-            return [[], [new Unreadable($package, $file, 'the manifest is not a JSON object')]];
+            return self::noProviders($package, $file, 'the manifest is not a JSON object');
         }
 
         $extra = $manifest['extra'] ?? null;
@@ -295,6 +295,16 @@ final class OwnerMap
         }
 
         return [$found, $unreadable];
+    }
+
+    /**
+     * The result of reading a manifest that yields no provider, with the reason it could not be read.
+     *
+     * @return array{0: list<class-string<AddonServiceProvider>>, 1: list<Unreadable>}
+     */
+    private static function noProviders(string $package, string $file, string $reason): array
+    {
+        return [[], [new Unreadable($package, $file, $reason)]];
     }
 
     /**
@@ -347,8 +357,14 @@ final class OwnerMap
         $base = realpath($root);
 
         // A file is read only after it was found on disk, so realpath fails only for one removed in between.
-        // @pest-mutate-ignore: BooleanOrToBooleanAnd,FalseToTrue,RemoveEarlyReturn
-        if ($real === false || $base === false) {
+        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn
+        if ($real === false) {
+            return [];
+        }
+
+        // The package root exists whenever a file in it was found, so this too fails only for a removal in between.
+        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn
+        if ($base === false) {
             return [];
         }
 
