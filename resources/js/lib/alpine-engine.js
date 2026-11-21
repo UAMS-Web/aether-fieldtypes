@@ -32,31 +32,63 @@
  */
 
 /**
+ * Whether Alpine has finished initializing the page's tree.
+ *
+ * `Alpine.version` is set when the module is imported, so it proves nothing about
+ * start order. Alpine marks each `x-data` element with `_x_dataStack` while it
+ * initializes the tree, so the first such element carrying it is the signal that
+ * `Alpine.start()` has run. A page with no `x-data` element has nothing to wait
+ * for, and an early bind is harmless there.
+ *
+ * @returns {boolean}
+ */
+function alpineHasStarted() {
+	if (!window.Alpine) return false;
+
+	const root = document.querySelector('[x-data]');
+
+	return root === null || root._x_dataStack !== undefined;
+}
+
+/**
  * Register a per-element Alpine engine. Safe to call from a module's top
- * level; deferred until Alpine signals it is ready.
+ * level, before or after `Alpine.start()`; binding waits until Alpine has
+ * initialized the tree.
+ *
+ * One element whose `init` throws does not stop the others: the error is logged
+ * with the selector, the element is left unbound so a later `bind()` retries it,
+ * and the scan continues. Elements inserted after Alpine started are not bound
+ * on their own; call the returned `bind()` after inserting them.
  *
  * @param {RegisterAlpineEngineOptions} options
+ * @returns {() => void}
+ *   Scans for unbound matching elements and binds them. Idempotent.
  */
 export function registerAlpineEngine({ selector, boundAttr, init }) {
 	const bindAll = () => {
 		document.querySelectorAll(selector).forEach((el) => {
 			if (el.dataset[boundAttr] === '1') return;
 			el.dataset[boundAttr] = '1';
-			init(el);
+
+			try {
+				init(el);
+			} catch (error) {
+				// Clear the flag so a later bind() retries this element.
+				delete el.dataset[boundAttr];
+				console.error(`registerAlpineEngine: init failed for selector "${selector}"`, error);
+			}
 		});
 	};
 
-	// If the page is still parsing, wait for the standard Alpine lifecycle
-	// event. If the document is already interactive AND Alpine has booted
-	// (window.Alpine.version is set after start()), queue the bind for the
-	// next microtask. The third branch is the same as the first but
-	// covers the edge case where Alpine hasn't booted yet during a late
-	// register call.
-	if (document.readyState === 'loading') {
-		document.addEventListener('alpine:initialized', bindAll, { once: true });
-	} else if (window.Alpine && window.Alpine.version) {
+	// Alpine fires `alpine:initialized` once, after it has initialized the tree.
+	// Listen for it whenever Alpine has not provably started, which covers a
+	// registration made while the page parses and one made after the module
+	// loaded but before a deferred `Alpine.start()`.
+	if (alpineHasStarted()) {
 		queueMicrotask(bindAll);
 	} else {
 		document.addEventListener('alpine:initialized', bindAll, { once: true });
 	}
+
+	return bindAll;
 }
