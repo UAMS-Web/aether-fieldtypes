@@ -106,3 +106,9 @@ parameters:
             identifier: function.alreadyNarrowedType
             path: src/Ownership/OwnerMap.php
             count: 1
+    # The owner check reports a listed fieldtype class that cannot be autoloaded, so the fixture
+    # lists one that does not exist; that string cannot satisfy the provider's `class-string` type.
+        -
+            identifier: property.phpDocType
+            path: tests/Support/Fixtures/PackageG/PackageGProvider.php
+            count: 1

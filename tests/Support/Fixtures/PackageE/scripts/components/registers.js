@@ -1,0 +1,1 @@
+Statamic.component('imported-a', {})
