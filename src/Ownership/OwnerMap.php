@@ -34,6 +34,15 @@ use Statamic\Providers\AddonServiceProvider;
  */
 final class OwnerMap
 {
+    /** Extensions of the files the scan reads as scripts, and resolves an import to as written. */
+    private const array CODE_EXTENSIONS = ['js', 'mjs', 'cjs', 'jsx', 'ts', 'tsx', 'vue'];
+
+    /** Extensions of the files an import names that hold no script, which the scan passes over. */
+    private const array ASSET_EXTENSIONS = [
+        'css', 'scss', 'sass', 'less', 'styl', 'svg', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'ico', 'bmp',
+        'json', 'woff', 'woff2', 'ttf', 'otf', 'eot', 'mp3', 'mp4', 'webm', 'ogg', 'wav', 'html', 'txt', 'md', 'wasm', 'map',
+    ];
+
     /**
      * @param  list<Claim>  $claims  Every claim made by the packages under inspection.
      * @param  list<Unreadable>  $unreadable  Every registration the check could not read.
@@ -251,9 +260,15 @@ final class OwnerMap
             return [[], [new Unreadable($package, $file, 'the manifest does not exist')]];
         }
 
-        // The file was just found, so the read returns text, and the cast only narrows `string|false`.
-        // @pest-mutate-ignore: RemoveStringCast
-        $manifest = json_decode((string) file_get_contents($file), true);
+        $contents = file_get_contents($file);
+
+        // A manifest that exists fails to read only for a permission or locking reason, which a test cannot raise on every platform.
+        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn
+        if ($contents === false) {
+            return [[], [new Unreadable($package, $file, 'the manifest could not be read')]];
+        }
+
+        $manifest = json_decode($contents, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             return [[], [new Unreadable($package, $file, 'the manifest is not valid JSON: '.json_last_error_msg())]];
@@ -265,13 +280,14 @@ final class OwnerMap
 
         $extra = $manifest['extra'] ?? null;
         $laravel = is_array($extra) ? ($extra['laravel'] ?? null) : null;
-        $providers = is_array($laravel) ? ($laravel['providers'] ?? null) : null;
+        // Laravel casts `providers` to an array, so a single class name written as a string is a provider too
+        $providers = is_array($laravel) ? (array) ($laravel['providers'] ?? []) : [];
 
         // Keep the listed classes that are add-on providers, and report one that cannot be read
         $found = [];
         $unreadable = [];
 
-        foreach (is_array($providers) ? $providers : [] as $provider) {
+        foreach ($providers as $provider) {
             if (! is_string($provider)) {
                 $unreadable[] = new Unreadable($package, $file, 'a listed provider is not a class name');
             } elseif (! class_exists($provider)) {
@@ -304,7 +320,7 @@ final class OwnerMap
         $declaresInput = is_array($vite) && is_array($vite['input'] ?? null);
 
         if ($declaresInput) {
-            $paths = array_filter($vite['input'], fn (mixed $path): bool => is_string($path) && str_ends_with($path, '.js'));
+            $paths = array_filter($vite['input'], fn (mixed $path): bool => is_string($path) && in_array(pathinfo($path, PATHINFO_EXTENSION), self::CODE_EXTENSIONS, true));
         }
 
         // Keep each file that exists
@@ -349,9 +365,17 @@ final class OwnerMap
         // @pest-mutate-ignore: TrueToFalse
         $visited[$real] = true;
         $label = ltrim(str_replace([$base, '\\'], ['', '/'], $real), '/');
-        // The file was just resolved, so the read returns text, and the cast only narrows `string|false`.
-        // @pest-mutate-ignore: RemoveStringCast
-        $source = self::withoutComments((string) file_get_contents($real));
+        $contents = file_get_contents($real);
+
+        // A file that was just resolved fails to read only for a permission or locking reason, which a test cannot raise on every platform.
+        // @pest-mutate-ignore: FalseToTrue,RemoveEarlyReturn
+        if ($contents === false) {
+            $unreadable[] = new Unreadable($package, $label, 'the file could not be read');
+
+            return [];
+        }
+
+        $source = self::withoutComments($contents);
         $names = [];
 
         // Collect the names registered with a string literal, and report any other first argument
@@ -397,18 +421,17 @@ final class OwnerMap
     }
 
     /**
-     * The source with block comments and whole-line comments removed, so a commented-out call is
-     * neither claimed nor reported.
+     * The source with block comments and line comments removed, so a commented-out call is neither
+     * claimed nor reported. A comment marker inside a string literal is kept with the string. A
+     * regular expression literal that holds a quote is not understood and can pair that quote with
+     * a later one on the same line.
      */
     private static function withoutComments(string $source): string
     {
-        // Any replacement text removes the comment's calls, and only their absence matters to the scan.
-        // @pest-mutate-ignore: EmptyStringToNotEmpty
-        $withoutBlocks = preg_replace('~/\*.*?\*/~s', '', $source) ?? $source;
+        // A string literal is matched first at each position, so a `/*` or `//` inside one is not a comment
+        $pattern = '~("(?:[^"\\\\\r\n]|\\\\.)*"|\'(?:[^\'\\\\\r\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`)|/\*.*?\*/|//[^\r\n]*~s';
 
-        // Any replacement text removes the comment's calls, and only their absence matters to the scan.
-        // @pest-mutate-ignore: EmptyStringToNotEmpty
-        return preg_replace('~^[ \t]*//.*$~m', '', $withoutBlocks) ?? $withoutBlocks;
+        return preg_replace_callback($pattern, fn (array $match): string => isset($match[1]) ? $match[0] : ' ', $source) ?? $source;
     }
 
     /**
@@ -439,7 +462,8 @@ final class OwnerMap
             $found[self::excerpt($glob)] = 'import.meta.glob cannot be followed';
         }
 
-        preg_match_all('/\bimport\(\s*(?![\'"])[^\r\n]*/', $source, $dynamic);
+        // The possessive `\s*+` keeps the lookahead from passing by giving back the space before a quote.
+        preg_match_all('/\bimport\(\s*+(?![\'"])[^\r\n]*/', $source, $dynamic);
 
         foreach ($dynamic[0] as $import) {
             $found[self::excerpt($import)] = 'a dynamic import with a computed path cannot be followed';
@@ -457,15 +481,15 @@ final class OwnerMap
     private static function relativeImports(string $source): array
     {
         preg_match_all('/\b(?:import|export)\b(?:[^\'";()]*?\bfrom)?\s*[\'"]([^\'"]+)[\'"]/', $source, $static);
-        preg_match_all('/\bimport\(\s*([\'"])([^\'"]+)\1\s*\)/', $source, $dynamic);
+        preg_match_all('/\bimport\(\s*+([\'"])([^\'"]+)\1/', $source, $dynamic);
 
-        // Keep the relative paths that name code, and not a stylesheet or an image.
+        // Keep the relative paths, except those that name a stylesheet, an image or another asset.
         // The result is iterated and never indexed, so the gaps the filters leave make no difference.
         // @pest-mutate-ignore: UnwrapArrayValues
         return array_values(array_unique(array_filter(
             [...$static[1], ...$dynamic[2]],
             fn (string $specifier): bool => preg_match('~^\.{1,2}/~', $specifier) === 1
-                && in_array(pathinfo($specifier, PATHINFO_EXTENSION), ['', 'js', 'mjs', 'vue'], true),
+                && ! in_array(strtolower(pathinfo($specifier, PATHINFO_EXTENSION)), self::ASSET_EXTENSIONS, true),
         )));
     }
 
@@ -475,9 +499,10 @@ final class OwnerMap
     private static function resolveImport(string $from, string $specifier): ?string
     {
         $path = $from.'/'.$specifier;
-        $candidates = pathinfo($specifier, PATHINFO_EXTENSION) === ''
-            ? [$path.'.js', $path.'.mjs', $path.'/index.js']
-            : [$path];
+        // A name with a code extension is that file; any other, such as `./date.utils`, is tried with each extension
+        $candidates = in_array(pathinfo($specifier, PATHINFO_EXTENSION), self::CODE_EXTENSIONS, true)
+            ? [$path]
+            : [$path.'.js', $path.'.mjs', $path.'.ts', $path.'/index.js'];
 
         foreach ($candidates as $candidate) {
             if (is_file($candidate)) {

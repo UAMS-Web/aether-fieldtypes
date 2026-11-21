@@ -5,6 +5,8 @@ import './components/Thing.vue'
 import './cycle-a.js'
 import './plain'
 import './modern'
+import './typed.ts'
+import './date.utils'
 import './style.css'
 import vue from 'vue'
 
@@ -17,3 +19,14 @@ const lazy = () => import('./lazy.js')
 
 // Statamic.$components.register('commented-out', {})
 /* Statamic.component('block-commented', {}) */
+
+const spaced = () => import( './spaced.js')
+const multi = () => import(
+    /* @vite-ignore */
+    './multi.js'
+)
+const withOptions = () => import('./options.js', { with: { type: 'json' } })
+
+const note = 'see /* here'
+Statamic.component('after-string-marker', {}) // a trailing comment
+/* a real comment */

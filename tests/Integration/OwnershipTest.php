@@ -239,11 +239,13 @@ it('claims component names registered in modules the entry imports, by every imp
     $map = OwnerMap::fromDirectories(['fixture/e' => __DIR__.'/../Support/Fixtures/PackageE/']);
 
     // Expect the entry's own names, then each module's: a static import, a directory index, a re-export, a Vue file,
-    // an import cycle (once), extensionless imports of a .js and a .mjs file, and a dynamic import with a literal path (one of its
-    // names all digits), and nothing from a comment, a stylesheet or a bare package
+    // an import cycle (once), extensionless imports of a .js and a .mjs file, a .ts file and a dotted name, dynamic imports with a literal
+    // path (written with spaces, across lines, and with a second argument; one name all digits), a call after a string holding a
+    // comment marker and before a trailing comment, and nothing from a comment, a stylesheet or a bare package
     expect(ownershipDescribe($map->claims()))->toBe([
         'fixture/e|Control Panel component|entry-own',
         'fixture/e|Control Panel component|tick-name',
+        'fixture/e|Control Panel component|after-string-marker',
         'fixture/e|Control Panel component|imported-a',
         'fixture/e|Control Panel component|nested-index',
         'fixture/e|Control Panel component|reexported',
@@ -251,8 +253,13 @@ it('claims component names registered in modules the entry imports, by every imp
         'fixture/e|Control Panel component|cycle-a',
         'fixture/e|Control Panel component|plain-js',
         'fixture/e|Control Panel component|modern-mjs',
+        'fixture/e|Control Panel component|typed-ts',
+        'fixture/e|Control Panel component|date-utils',
         'fixture/e|Control Panel component|lazy-loaded',
         'fixture/e|Control Panel component|2026',
+        'fixture/e|Control Panel component|spaced',
+        'fixture/e|Control Panel component|multi',
+        'fixture/e|Control Panel component|options',
     ])->and($map->unreadable())->toBe([]);
 });
 
@@ -309,7 +316,19 @@ it('does not report a manifest that is valid but lists no provider', function (s
 
     // Expect nothing reported
     expect($map->unreadable())->toBe([]);
-})->with(['extra-scalar', 'laravel-scalar', 'providers-scalar', 'no-extra']);
+})->with(['extra-scalar', 'laravel-scalar', 'no-extra']);
+
+it('reads a provider listed as a single string, as Laravel does, and reports one that cannot be autoloaded', function (): void {
+    // Read a manifest whose `providers` is one real class name, and another whose is a string naming no class
+    $fixtures = __DIR__.'/../Support/Fixtures/Manifests/';
+    $real = OwnerMap::fromDirectories(['fixture/e' => $fixtures.'provider-string/']);
+    $missing = OwnerMap::fromDirectories(['fixture/x' => $fixtures.'providers-scalar/']);
+
+    // Expect the real provider's fieldtype claims read, and the other reported by its name
+    expect(ownershipDescribe($real->claims()))->toBe(['fixture/e|fieldtype handle|listed', 'fixture/e|fieldtype handle|autoloaded'])
+        ->and($real->unreadable())->toBe([])
+        ->and(unreadableDescribe($missing->unreadable()))->toBe(['fixture/x|x|the provider class cannot be autoloaded']);
+});
 
 it('reports a listed provider that is not a class name or cannot be autoloaded, and skips a class that is no provider', function (): void {
     // Read a fixture whose manifest lists a real provider, a class that is not one, a missing class and a number

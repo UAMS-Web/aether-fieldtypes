@@ -1,0 +1,1 @@
+Statamic.component('typed-ts', {})
