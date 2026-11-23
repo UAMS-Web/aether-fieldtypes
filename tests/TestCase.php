@@ -61,6 +61,22 @@ abstract class TestCase extends AddonTestCase
         if ($path !== null) {
             $app['config']->set('cache.stores.outpost.path', $path);
         }
+
+        // Give this worker its own copy of every Stache store directory: Statamic points them all at one
+        // shared fixtures tree, so a container or entry one worker saves or deletes reaches every other
+        $token = $_SERVER['TEST_TOKEN'] ?? null;
+        $worker = \is_scalar($token) && preg_match('/^[A-Za-z0-9_-]+$/', (string) $token) === 1 ? (string) $token : 'serial';
+
+        /** @var array<string, array<string, mixed>> $stores */
+        $stores = $app['config']->get('statamic.stache.stores', []);
+
+        foreach ($stores as $name => $store) {
+            $directory = $store['directory'] ?? null;
+
+            if (\is_string($directory) && str_contains($directory, '/__fixtures__/')) {
+                $app['config']->set("statamic.stache.stores.{$name}.directory", str_replace('/__fixtures__/', "/__fixtures__/{$worker}/", $directory));
+            }
+        }
     }
 
     /**
