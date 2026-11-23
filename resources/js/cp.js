@@ -1,5 +1,6 @@
 // Control Panel entry point. Components, fieldtypes and Inertia pages register inside the
 // booting callback so they run once Statamic has initialized.
+import CheckboxesFieldtype from './components/fieldtypes/CheckboxesFieldtype.vue'
 import CssSelectorFieldtype from './components/fieldtypes/CssSelectorFieldtype.vue'
 import CurrencyFieldtype from './components/fieldtypes/CurrencyFieldtype.vue'
 import CustomInput from './components/fieldtypes/partials/CustomInput.vue'
@@ -11,6 +12,7 @@ import IntegerFieldtype from './components/fieldtypes/IntegerFieldtype.vue'
 import MonthFieldtype from './components/fieldtypes/MonthFieldtype.vue'
 import PasswordFieldtype from './components/fieldtypes/PasswordFieldtype.vue'
 import PhoneFieldtype from './components/fieldtypes/PhoneFieldtype.vue'
+import RadioFieldtype from './components/fieldtypes/RadioFieldtype.vue'
 import SubsectionFieldtype from './components/fieldtypes/SubsectionFieldtype.vue'
 import TextFieldtype from './components/fieldtypes/TextFieldtype.vue'
 import UrlFieldtype from './components/fieldtypes/UrlFieldtype.vue'
@@ -24,9 +26,11 @@ Statamic.booting(() => {
     Statamic.$components.register('custom-text-input', CustomInputText)
 
     Statamic.$components.register('css_selector-fieldtype', CssSelectorFieldtype)
+    Statamic.$components.register('custom_checkboxes-fieldtype', CheckboxesFieldtype)
     Statamic.$components.register('currency-fieldtype', CurrencyFieldtype)
     Statamic.$components.register('custom_floatval-fieldtype', FloatvalFieldtype)
     Statamic.$components.register('custom_integer-fieldtype', IntegerFieldtype)
+    Statamic.$components.register('custom_radio-fieldtype', RadioFieldtype)
     Statamic.$components.register('custom_text-fieldtype', TextFieldtype)
     Statamic.$components.register('email-fieldtype', EmailFieldtype)
     Statamic.$components.register('identifier-fieldtype', IdentifierFieldtype)

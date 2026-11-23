@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace UAMSWeb\Aether\Fieldtypes;
 
+use Statamic\Events\FormSubmitted;
 use Statamic\Providers\AddonServiceProvider;
+use UAMSWeb\Aether\Fieldtypes\Listeners\EnforceChoiceSubmissionLimits;
 
 /**
  * Service provider for the add-on.
@@ -32,6 +34,20 @@ class ServiceProvider extends AddonServiceProvider
             'resources/css/cp.css',
         ],
         'publicDirectory' => 'resources/dist',
+    ];
+
+    /**
+     * Refuse a form submission its choice limits reject.
+     *
+     * @var array<class-string, list<class-string>>
+     */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Forms/ChoiceSubmissionLimitsEnforcementTest.php posts through the registered listener.
+    // @pest-mutate-ignore: RemoveArrayItem
+    protected $listen = [
+        FormSubmitted::class => [
+            EnforceChoiceSubmissionLimits::class,
+        ],
     ];
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Statamic\Facades\Antlers;
 use Statamic\Fields\Fieldtype;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Checkboxes;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\CssSelector;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Currency;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Email;
@@ -14,6 +15,8 @@ use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Integer;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Month;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Password;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Phone;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Radio;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Select;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Text;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Time;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Url;
@@ -120,4 +123,34 @@ it('registers a Control Panel component for every input fieldtype that has one o
     expect($own)->toContain(...$expected)
         ->and(array_map(fn (Fieldtype $fieldtype): string => $fieldtype->component(), [new Hidden, new Time]))->toBe(['hidden', 'time'])
         ->and($own)->not->toContain(Claim::COMPONENT.'|hidden-fieldtype', Claim::COMPONENT.'|time-fieldtype');
+});
+
+it('serves the choice fieldtypes under the handles they replace', function (string $handle, Fieldtype $fieldtype): void {
+    // Expect the host's fieldtype registry to resolve each handle to the add-on class
+    expect($fieldtype::handle())->toBe($handle)
+        ->and(app('statamic.fieldtypes')->get($handle))->toBe($fieldtype::class);
+})->with([
+    'checkboxes' => ['checkboxes', new Checkboxes],
+    'radio' => ['radio', new Radio],
+    'select' => ['select', new Select],
+]);
+
+it('offers a public form partial for each choice fieldtype', function (string $name): void {
+    // Expect Statamic's own view namespace to find the add-on's partial
+    expect(view()->exists('statamic::forms.fields.'.$name))->toBeTrue();
+})->with(['checkboxes', 'radio', 'select']);
+
+it('claims the Control Panel components of Checkboxes and Radio, and none for Select', function (): void {
+    // Read this add-on's claims through the add-ons the test application booted
+    $own = array_map(
+        fn (Claim $claim): string => $claim->kind.'|'.$claim->name,
+        array_filter(
+            OwnerMap::fromInstalledAddons()->claims(),
+            fn (Claim $claim): bool => $claim->owner === 'uams-web/aether-fieldtypes',
+        ),
+    );
+
+    // Select renders through Statamic's own component, so it registers none
+    expect($own)->toContain(Claim::COMPONENT.'|custom_checkboxes-fieldtype', Claim::COMPONENT.'|custom_radio-fieldtype')
+        ->and($own)->not->toContain(Claim::COMPONENT.'|select-fieldtype', Claim::COMPONENT.'|custom_select-fieldtype');
 });

@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as publicEntry from './alpine.js';
 import { registerAlpineEngine } from './lib/alpine-engine.js';
 import { registerCalculationEngine } from './lib/calculation-engine.js';
+import { registerCheckboxRequiredGroup } from './lib/checkbox-required-group.js';
 
 describe('the public Alpine entry', () => {
 	it('exposes registerAlpineEngine for a host to import before Alpine.start()', () => {
@@ -16,9 +17,14 @@ describe('the public Alpine entry', () => {
 		expect(publicEntry.registerCalculationEngine).toBe(registerCalculationEngine);
 	});
 
+	it('exposes the checkbox group registration the checkboxes partial names', () => {
+		// The entry re-exports the component's own function, not a copy
+		expect(publicEntry.registerCheckboxRequiredGroup).toBe(registerCheckboxRequiredGroup);
+	});
+
 	it('exposes nothing else yet', () => {
 		// Each fieldtype family adds its engine here as it moves in
-		expect(Object.keys(publicEntry).sort()).toEqual(['registerAlpineEngine', 'registerCalculationEngine']);
+		expect(Object.keys(publicEntry).sort()).toEqual(['registerAlpineEngine', 'registerCalculationEngine', 'registerCheckboxRequiredGroup']);
 	});
 });
 

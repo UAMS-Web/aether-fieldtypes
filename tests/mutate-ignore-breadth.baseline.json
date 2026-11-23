@@ -25,6 +25,12 @@
             "detail": "RemoveArrayItem=4"
         },
         {
+            "path": "src/ServiceProvider.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=2"
+        },
+        {
             "path": "src/Traits/SometimesValidationRules.php",
             "marker": "// @pest-mutate-ignore: RemoveArrayItem,EmptyStringToNotEmpty",
             "finding": "removes MORE than one mutant of a named mutator",
