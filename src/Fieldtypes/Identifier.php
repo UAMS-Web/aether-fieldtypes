@@ -1406,7 +1406,7 @@ class Identifier extends Fieldtype
      * Special Handling:
      *   - Regex rules are converted to IdentifierRegex instances for custom
      *     validation
-     *   - Class instantiation rules (e.g., 'new UAMSWeb\Aether\Fieldtypes\Rules\Npi') are instantiated as
+     *   - Class instantiation rules (e.g., 'new App\Rules\Npi') are instantiated as
      *     objects
      *   - Other Laravel rules are converted to string format (e.g., 'min:3', 'max:10')
      *   - Arguments are joined with commas for string-based rules
@@ -1487,7 +1487,7 @@ class Identifier extends Fieldtype
                         )
                     ) { // Check if the rule is a class instantiation rule
                         // ---
-                        // Handle class instantiation rules (e.g., 'new UAMSWeb\Aether\Fieldtypes\Rules\Npi')
+                        // Handle class instantiation rules (e.g., 'new App\Rules\Npi')
                         // ---
 
                         // Extract the class name by removing the 'new ' prefix
