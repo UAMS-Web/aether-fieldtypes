@@ -73,34 +73,56 @@ jobs:
       # pull request or a push, so an `:(exclude)` entry leaves one file out. The input family, its
       # rules and `PhoneUtil` are copied from the site with the coverage its tests give them
       # (UAMS-Web/aether-fieldtypes#22 hardens them, one slice at a time, and each slice deletes its
-      # own lines below); every other changed file in `src` still needs 100%. A scheduled or
+      # own lines below). The assets, date and structure classes are copied the same way
+      # (UAMS-Web/aether-fieldtypes#28), and `Entries` and `FieldRequiredHelper` carry the one edit that
+      # replaces a dependency on a sibling add-on. Every other changed file in `src` still needs 100%. A scheduled or
       # dispatched run mutates everything `composer mutate` covers and ignores this input.
       mutate-paths: >-
         src
+        :(exclude)src/Fieldtypes/Assets.php
+        :(exclude)src/Fieldtypes/Audio.php
         :(exclude)src/Fieldtypes/Checkboxes.php
         :(exclude)src/Fieldtypes/CssSelector.php
         :(exclude)src/Fieldtypes/Currency.php
+        :(exclude)src/Fieldtypes/Date.php
         :(exclude)src/Fieldtypes/Email.php
+        :(exclude)src/Fieldtypes/Entries.php
         :(exclude)src/Fieldtypes/Floatval.php
         :(exclude)src/Fieldtypes/Hidden.php
+        :(exclude)src/Fieldtypes/Html.php
         :(exclude)src/Fieldtypes/Identifier.php
         :(exclude)src/Fieldtypes/Integer.php
+        :(exclude)src/Fieldtypes/Lists.php
         :(exclude)src/Fieldtypes/Month.php
         :(exclude)src/Fieldtypes/Password.php
         :(exclude)src/Fieldtypes/Phone.php
+        :(exclude)src/Fieldtypes/Replicator.php
+        :(exclude)src/Fieldtypes/Section.php
+        :(exclude)src/Fieldtypes/Terms.php
+        :(exclude)src/Fieldtypes/TermsSearchIndex.php
         :(exclude)src/Fieldtypes/Text.php
         :(exclude)src/Fieldtypes/Time.php
+        :(exclude)src/Fieldtypes/TrueFalse.php
         :(exclude)src/Fieldtypes/Url.php
         :(exclude)src/Fieldtypes/Username.php
+        :(exclude)src/Fieldtypes/Video.php
         :(exclude)src/Fieldtypes/Week.php
         :(exclude)src/Fieldtypes/Xpath.php
-        :(exclude)src/Traits/PresetOptions.php
+        :(exclude)src/Rules/AssetMinimumDimensions.php
         :(exclude)src/Rules/BaseValidationRule.php
+        :(exclude)src/Rules/DateBoundary.php
+        :(exclude)src/Rules/FieldRequiredHelper.php
         :(exclude)src/Rules/IdentifierRegex.php
         :(exclude)src/Rules/InternationalPhone.php
         :(exclude)src/Rules/NationalPhone.php
+        :(exclude)src/Rules/ReplicatorMinSets.php
+        :(exclude)src/Rules/ReplicatorRequireAtLeastOneEnabledSet.php
         :(exclude)src/Rules/SmsShortCode.php
+        :(exclude)src/Scopes
         :(exclude)src/Services/PhoneUtil.php
+        :(exclude)src/Support/DateBoundaryEngine.php
+        :(exclude)src/Traits/FormBlueprintContext.php
+        :(exclude)src/Traits/PresetOptions.php
 
   # Not in the chain: the repository's decision log has an order a person can break by hand.
   decision-log:

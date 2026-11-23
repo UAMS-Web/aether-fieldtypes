@@ -70,8 +70,13 @@
         "pestphp/pest-plugin-phpstan": "^5.2",
         "phpstan/phpstan-mockery": "^2.0",
         "rector/rector": "^2.7",
+        "uams-web/aether-form-settings": "^0.5",
         "uams-web/patches-orchestra-testbench-core": "^1.1.0",
         "uams-web/patches-pest-plugin-mutate": "^1.4.0"
+    },
+    "suggest": {
+        "uams-web/aether-form-settings": "Evaluates the field conditions the Replicator rules read through FieldRequiredHelper",
+        "uams-web/aether-people": "Provides the people editing scope the Entries picker applies to a scoped editor"
     },
     "config": {
         "sort-packages": true,
