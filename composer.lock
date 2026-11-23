@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6a4bdfcf708cf6d266bb6421a164560",
+    "content-hash": "ebae014981dc62373abcdc62650128fb",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -14372,6 +14372,81 @@
                 "source": "https://github.com/ta-tikoma/phpunit-architecture-test/tree/0.8.7"
             },
             "time": "2026-02-17T17:25:14+00:00"
+        },
+        {
+            "name": "uams-web/aether-form-settings",
+            "version": "v0.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UAMS-Web/aether-form-settings.git",
+                "reference": "8abd4d9a19fd850fbba10625d65838bbdbe94781"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UAMS-Web/aether-form-settings/zipball/8abd4d9a19fd850fbba10625d65838bbdbe94781",
+                "reference": "8abd4d9a19fd850fbba10625d65838bbdbe94781",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.4",
+                "statamic/cms": "^6.35"
+            },
+            "require-dev": {
+                "cweagans/composer-patches": "^2.0",
+                "driftingly/rector-laravel": "^2.6",
+                "larastan/larastan": "^3.13",
+                "laravel/pint": "^1.32",
+                "orchestra/testbench": "^11.3",
+                "pestphp/pest": "^5.3",
+                "pestphp/pest-plugin-phpstan": "^5.2",
+                "phpstan/phpstan-mockery": "2.0",
+                "rector/rector": "^2.7",
+                "uams-web/patches-orchestra-testbench-core": "^1.1",
+                "uams-web/patches-pest-plugin-mutate": "^1.4"
+            },
+            "type": "statamic-addon",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "UAMSWeb\\Aether\\Forms\\Settings\\ServiceProvider"
+                    ]
+                },
+                "statamic": {
+                    "name": "Form Settings",
+                    "description": "Notification routing and conditions, confirmations, submission restrictions, and quiz and survey scoring for Statamic forms."
+                },
+                "composer-exit-on-patch-failure": true
+            },
+            "autoload": {
+                "psr-4": {
+                    "UAMSWeb\\Aether\\Forms\\Settings\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "UAMS Web Services"
+                },
+                {
+                    "name": "Josh Daugherty",
+                    "role": "Web Developer"
+                }
+            ],
+            "description": "Control Panel form settings for Statamic: notification routing and conditions, confirmations, submission restrictions, and quiz and survey scoring, each behind its own switch.",
+            "homepage": "https://github.com/UAMS-Web/aether-form-settings",
+            "keywords": [
+                "statamic",
+                "statamic-addon"
+            ],
+            "support": {
+                "issues": "https://github.com/UAMS-Web/aether-form-settings/issues",
+                "source": "https://github.com/UAMS-Web/aether-form-settings"
+            },
+            "time": "2026-11-22T22:43:15+00:00",
+            "published-time": "2026-11-22T22:56:23+00:00"
         },
         {
             "name": "uams-web/patches-orchestra-testbench-core",

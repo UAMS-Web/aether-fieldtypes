@@ -85,7 +85,16 @@ declare(strict_types=1);
  *
  * @var array<string, array{rules: list<string>, reason: string}>
  */
-const ALLOWLIST = [];
+const ALLOWLIST = [
+    'tests/Integration/Fieldtypes/AssetsFieldtypeTest.php' => [
+        'rules' => ['A'],
+        'reason' => 'The fake disk is rerooted to a path carrying uniqid(), so no other worker fakes or cleans the same directory.',
+    ],
+    'tests/Integration/Fieldtypes/AssetsMinimumDimensionsEnforcementTest.php' => [
+        'rules' => ['A'],
+        'reason' => 'The fake disk is rerooted to a path carrying uniqid(), so no other worker fakes or cleans the same directory.',
+    ],
+];
 
 /**
  * The rules an {@see ALLOWLIST} row may name: the parallelism rules. Rule E is not

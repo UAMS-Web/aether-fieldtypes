@@ -19,6 +19,15 @@ return [
         'before_or_equal' => 'The month must be before or equal to :max.',
     ],
 
+    'replicator' => [
+        'at_least_one_enabled_set' => 'At least one set must be enabled.',
+        'min_sets' => [
+            'one' => 'At least one set is required.',
+            'multiple' => 'At least :min sets are required.',
+        ],
+        'min_sets_instructions' => 'Set a minimum number of sets.',
+    ],
+
     'sms_short_code' => 'The value must be a valid U.S. SMS short code consisting of five or six digits, with the first digit being 0 or any digit from 2 to 9 (e.g., \'01234\', \'012345\', \'23456\', \'234567\').',
 
     'week' => [

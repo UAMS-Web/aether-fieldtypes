@@ -12,6 +12,7 @@
     },
     "devDependencies": {
         "@alpinejs/csp": "^3.17.5",
+        "@internationalized/date": "^3.12.4",
         "@statamic/cms": "file:vendor/statamic/cms/resources/dist-package",
         "@tailwindcss/vite": "^4.3.5",
         "imask": "^7.6.1",
@@ -19,6 +20,7 @@
         "laravel-vite-plugin": "^3.2.1",
         "libphonenumber-js": "^1.13.17",
         "mathjs": "^15.2.0",
+        "reka-ui": "^2.11.0",
         "tailwindcss": "^4.3.5",
         "vite": "^8.3.8",
         "vitest": "^5.1.0",

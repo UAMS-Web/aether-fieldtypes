@@ -24,7 +24,14 @@ describe('the public Alpine entry', () => {
 
 	it('exposes nothing else yet', () => {
 		// Each fieldtype family adds its engine here as it moves in
-		expect(Object.keys(publicEntry).sort()).toEqual(['registerAlpineEngine', 'registerCalculationEngine', 'registerCheckboxRequiredGroup']);
+		expect(Object.keys(publicEntry).sort()).toEqual([
+			'registerAlpineEngine',
+			'registerCalculationEngine',
+			'registerCheckboxRequiredGroup',
+			'registerListField',
+			'registerReplicatorField',
+			'registerReplicatorSet',
+		]);
 	});
 });
 
