@@ -93,8 +93,11 @@ jobs:
         :(exclude)src/Fieldtypes/Username.php
         :(exclude)src/Fieldtypes/Week.php
         :(exclude)src/Fieldtypes/Xpath.php
-        :(exclude)src/Fieldtypes/ZipCode.php
-        :(exclude)src/Rules
+        :(exclude)src/Rules/BaseValidationRule.php
+        :(exclude)src/Rules/IdentifierRegex.php
+        :(exclude)src/Rules/InternationalPhone.php
+        :(exclude)src/Rules/NationalPhone.php
+        :(exclude)src/Rules/SmsShortCode.php
         :(exclude)src/Services/PhoneUtil.php
 
   # Not in the chain: the repository's decision log has an order a person can break by hand.

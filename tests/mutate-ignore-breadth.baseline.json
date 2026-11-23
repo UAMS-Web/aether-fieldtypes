@@ -1,6 +1,18 @@
 {
     "findings": [
         {
+            "path": "src/Fieldtypes/ZipCode.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=8"
+        },
+        {
+            "path": "src/Fieldtypes/ZipCode.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=2"
+        },
+        {
             "path": "src/Fieldtypes/Subsection.php",
             "marker": "// @pest-mutate-ignore: RemoveArrayItem",
             "finding": "removes MORE than one mutant of a named mutator",
