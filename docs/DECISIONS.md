@@ -35,3 +35,13 @@ Oldest first, one entry per closed decision, so **a new entry is appended to the
 **Rejected.** Snapshotting the synced files into the template: every new add-on would begin with a stale copy that conflicts with its first sync pull request. Copying a license from an existing add-on: legal has not decided which license applies.
 
 **Companion.** `UAMS-Web/uams-statamic#261`.
+
+## 2026-11-23: The add-on ships the GPS address-search endpoint, and the egress guard is a host-bound seam (#49)
+
+**Decision.** The add-on provides the `gps/nominatim-search` Control Panel route, its controller and the `maps.nominatim` settings. The controller fetches through a contract resolved from the container; a host binds its own egress guard, and a host that binds nothing gets a conservative default that allows only `http` and `https` to the one configured endpoint host and refuses loopback, private and link-local addresses.
+
+**Why.** The endpoint serves only the add-on's own fieldtype, so a host should not have to rebuild it. The guard is security code shared by nine site classes and must keep one owner. Editor input only reaches the query string, so the guard defends against a misconfigured endpoint setting, which a narrow default and a host-bound guard cover. A later shared guard package drops in behind the same contract.
+
+**Rejected.** Documenting the endpoint as a host contract: the address-search box fails silently on a host that enables it and every host rebuilds the controller. Shipping the controller with a copy of the 800-line site guard: two copies of a security class drift apart.
+
+**Companion.** `UAMS-Web/aether-fieldtypes#49`.
