@@ -1,6 +1,9 @@
+// @vitest-environment jsdom
+
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as publicEntry from './alpine.js';
 import { registerAlpineEngine } from './lib/alpine-engine.js';
+import { registerCalculationEngine } from './lib/calculation-engine.js';
 
 describe('the public Alpine entry', () => {
 	it('exposes registerAlpineEngine for a host to import before Alpine.start()', () => {
@@ -8,9 +11,14 @@ describe('the public Alpine entry', () => {
 		expect(publicEntry.registerAlpineEngine).toBe(registerAlpineEngine);
 	});
 
+	it('exposes the calculation engine registration, the one engine moved in so far', () => {
+		// The entry re-exports the engine's own function, not a copy
+		expect(publicEntry.registerCalculationEngine).toBe(registerCalculationEngine);
+	});
+
 	it('exposes nothing else yet', () => {
 		// Each fieldtype family adds its engine here as it moves in
-		expect(Object.keys(publicEntry)).toEqual(['registerAlpineEngine']);
+		expect(Object.keys(publicEntry).sort()).toEqual(['registerAlpineEngine', 'registerCalculationEngine']);
 	});
 });
 

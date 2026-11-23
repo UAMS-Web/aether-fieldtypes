@@ -8,7 +8,7 @@ The shared fieldtype add-on for UAMS Statamic sites. It holds the traits, the Co
 - **Public form partials** in `resources/views/forms/fields`, registered under Statamic's own `statamic::forms.fields.<handle>` names. A host's `resources/views/vendor/statamic/forms/fields` file of the same name is searched first and wins.
 - **Shared traits** under `UAMSWeb\Aether\Fieldtypes\Traits`: the input, validation, subfield, config-section, mask and default-value helpers the fieldtypes build on.
 - **Shared Control Panel JavaScript** in `resources/js/components/fieldtypes`: `CustomTextInputFieldtypeMixin`, `GroupFieldtypeShell`, `subfieldId`, and the "Other" option mixin, utility and partial.
-- **The public Alpine helper**, `registerAlpineEngine`, from `resources/js/alpine.js`. A host application imports it before it calls `Alpine.start()` (see [Usage](#usage)), so each engine registers while Alpine is booting.
+- **The public Alpine entry**, `resources/js/alpine.js`, which exports the `registerAlpineEngine` helper and `registerCalculationEngine`, the engine that fills the inputs the form partials mark with `data-calculation-*` attributes. A host application imports it before it calls `Alpine.start()` (see [Usage](#usage)), so each engine registers while Alpine is booting.
 - **The owner check**, `UAMSWeb\Aether\Fieldtypes\Ownership\OwnerMap`, which reads the fieldtype handles and Control Panel component names that each installed add-on registers and fails when two packages register one.
 - **The add-on's own lang namespace**, `aether-fieldtypes::messages` and `aether-fieldtypes::validation`. A host overrides a message by publishing the file to `lang/vendor/aether-fieldtypes`.
 
@@ -30,15 +30,19 @@ Statamic discovers the add-on through `extra.statamic` in `composer.json`, and L
 
 ## Usage
 
-### Import the Alpine helper
+### Import the Alpine entry
 
-In the host's JavaScript entry, import the helper before `Alpine.start()`:
+In the host's JavaScript entry, import the entry before `Alpine.start()` and register the engines the host's partials use:
 
 ```js
-import { registerAlpineEngine } from '../../vendor/uams-web/aether-fieldtypes/resources/js/alpine.js'
+import { registerAlpineEngine, registerCalculationEngine } from '../../vendor/uams-web/aether-fieldtypes/resources/js/alpine.js'
+
+registerCalculationEngine()
 ```
 
-The helper is a source module and is not built into the add-on's committed Control Panel bundle: the host's own build includes it.
+The calculation engine imports `@alpinejs/csp`, so the host's build must resolve that package. The engine fires a `change` event after it checks a box in a list field, so a host's required Checkboxes group re-evaluates `required` on its own `change` handler.
+
+The entry is a source module and is not built into the add-on's committed Control Panel bundle: the host's own build includes it.
 
 ### Assert that every name has one owner
 
