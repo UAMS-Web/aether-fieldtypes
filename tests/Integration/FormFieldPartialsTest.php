@@ -21,6 +21,8 @@ use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Username;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Week;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Xpath;
 use UAMSWeb\Aether\Fieldtypes\Fieldtypes\ZipCode;
+use UAMSWeb\Aether\Fieldtypes\Ownership\Claim;
+use UAMSWeb\Aether\Fieldtypes\Ownership\OwnerMap;
 
 /**
  * The public form partials the input fieldtypes ship, and the handles the add-on serves.
@@ -98,4 +100,24 @@ it('renders a hidden input with no label markup, and honors the value', function
         ->toContain('name="token"')
         ->toContain('value="abc"')
         ->not->toContain('form-control');
+});
+
+it('registers a Control Panel component for every input fieldtype that has one of its own', function (): void {
+    // Read this add-on's claims through the add-ons the test application booted
+    $own = array_map(
+        fn (Claim $claim): string => $claim->kind.'|'.$claim->name,
+        array_filter(
+            OwnerMap::fromInstalledAddons()->claims(),
+            fn (Claim $claim): bool => $claim->owner === 'uams-web/aether-fieldtypes',
+        ),
+    );
+
+    // Hidden and Time render through Statamic's own components, so they register none
+    $fieldtypes = [new CssSelector, new Currency, new Email, new Floatval, new Identifier, new Integer, new Month, new Password, new Phone, new Text, new Url, new Username, new Week, new Xpath, new ZipCode];
+    $expected = array_map(fn (Fieldtype $fieldtype): string => Claim::COMPONENT.'|'.$fieldtype->component().'-fieldtype', $fieldtypes);
+
+    // Expect each component name claimed by the add-on, which the owner test then holds to one owner
+    expect($own)->toContain(...$expected)
+        ->and(array_map(fn (Fieldtype $fieldtype): string => $fieldtype->component(), [new Hidden, new Time]))->toBe(['hidden', 'time'])
+        ->and($own)->not->toContain(Claim::COMPONENT.'|hidden-fieldtype', Claim::COMPONENT.'|time-fieldtype');
 });
