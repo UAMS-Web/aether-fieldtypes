@@ -11,9 +11,11 @@
         "test:scripts": "vitest run"
     },
     "devDependencies": {
+        "@alpinejs/csp": "^3.17.5",
         "@statamic/cms": "file:vendor/statamic/cms/resources/dist-package",
         "@tailwindcss/vite": "^4.3.5",
         "imask": "^7.6.1",
+        "jsdom": "^27.4.0",
         "laravel-vite-plugin": "^3.2.1",
         "libphonenumber-js": "^1.13.17",
         "mathjs": "^15.2.0",
