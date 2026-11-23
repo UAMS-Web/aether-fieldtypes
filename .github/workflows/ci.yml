@@ -104,7 +104,6 @@ jobs:
         :(exclude)src/Fieldtypes/Option.php
         :(exclude)src/Fieldtypes/PartialDate.php
         :(exclude)src/Fieldtypes/Password.php
-        :(exclude)src/Fieldtypes/Phone.php
         :(exclude)src/Fieldtypes/Product.php
         :(exclude)src/Fieldtypes/Replicator.php
         :(exclude)src/Fieldtypes/Section.php
@@ -126,15 +125,11 @@ jobs:
         :(exclude)src/Rules/DateBoundary.php
         :(exclude)src/Rules/FieldRequiredHelper.php
         :(exclude)src/Rules/IdentifierRegex.php
-        :(exclude)src/Rules/InternationalPhone.php
         :(exclude)src/Rules/Latitude.php
         :(exclude)src/Rules/Longitude.php
-        :(exclude)src/Rules/NationalPhone.php
         :(exclude)src/Rules/ReplicatorMinSets.php
         :(exclude)src/Rules/ReplicatorRequireAtLeastOneEnabledSet.php
-        :(exclude)src/Rules/SmsShortCode.php
         :(exclude)src/Scopes
-        :(exclude)src/Services/PhoneUtil.php
         :(exclude)src/Support/DateBoundaryEngine.php
         :(exclude)src/Traits/FormBlueprintContext.php
         :(exclude)src/Traits/PresetOptions.php

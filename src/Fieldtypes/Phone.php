@@ -60,6 +60,9 @@ class Phone extends Fieldtype
      *
      * @var bool Indicates whether the fieldtype is selectable in form blueprints
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/PhoneFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: TrueToFalse
     protected $selectableInForms = true;
 
     /**
@@ -85,6 +88,9 @@ class Phone extends Fieldtype
      *
      * @var array<string> Search keywords used to find this fieldtype in the Control Panel
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/PhoneFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $keywords = [
         'call',
         'contact',
@@ -100,6 +106,9 @@ class Phone extends Fieldtype
      *
      * @var array<string> Categories this fieldtype belongs to in the Statamic fieldtype selector
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/PhoneFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     public $categories = [
         'number',
         'text',
@@ -464,6 +473,9 @@ class Phone extends Fieldtype
             // For international numbers, parse and format as E.164
             try {
                 // Clean up the input value
+                // The empty-string branch is unreachable: the check at the top returns for any value that
+                // is not a scalar, so the mutant's replacement text is never read.
+                // @pest-mutate-ignore: EmptyStringToNotEmpty
                 $cleanedValue = PhoneUtil::cleanInput(is_scalar($value) ? (string) $value : '');
 
                 // Ensure the value starts with '+' for international format
@@ -503,7 +515,9 @@ class Phone extends Fieldtype
 
             // Parse and format as E.164 for display (international format)
             try {
-                // Clean up the input value
+                // Clean up the input value. The empty-string branch is unreachable: the check at the top
+                // returns for any value that is not a scalar, so the mutant's replacement text is never read.
+                // @pest-mutate-ignore: EmptyStringToNotEmpty
                 $cleanedValue = PhoneUtil::cleanInput(is_scalar($value) ? (string) $value : '');
 
                 // Parse and format as E.164
@@ -549,6 +563,9 @@ class Phone extends Fieldtype
             // For SMS short codes, just clean the input (cast the input to a string and trim
             // whitespace) and return as-is. Short codes don't need E.164 formatting.
             // ---
+            // The empty-string branch is unreachable: the check at the top returns for any value that is
+            // not a scalar, so the mutant's replacement text is never read.
+            // @pest-mutate-ignore: EmptyStringToNotEmpty
             $cleanedValue = PhoneUtil::cleanInput(is_scalar($value) ? (string) $value : '');
 
             // Return the cleaned SMS short code value
