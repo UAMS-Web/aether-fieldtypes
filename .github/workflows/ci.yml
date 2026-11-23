@@ -75,33 +75,46 @@ jobs:
       # (UAMS-Web/aether-fieldtypes#22 hardens them, one slice at a time, and each slice deletes its
       # own lines below). The assets, date and structure classes are copied the same way
       # (UAMS-Web/aether-fieldtypes#28), and `Entries` and `FieldRequiredHelper` carry the one edit that
-      # replaces a dependency on a sibling add-on. Every other changed file in `src` still needs 100%. A scheduled or
+      # replaces a dependency on a sibling add-on. The form composite classes are copied the same way
+      # (UAMS-Web/aether-fieldtypes#29). Every other changed file in `src` still needs 100%. A scheduled or
       # dispatched run mutates everything `composer mutate` covers and ignores this input.
       mutate-paths: >-
         src
+        :(exclude)src/Fieldtypes/Address.php
         :(exclude)src/Fieldtypes/Assets.php
         :(exclude)src/Fieldtypes/Audio.php
         :(exclude)src/Fieldtypes/Checkboxes.php
+        :(exclude)src/Fieldtypes/Consent.php
         :(exclude)src/Fieldtypes/CssSelector.php
         :(exclude)src/Fieldtypes/Currency.php
         :(exclude)src/Fieldtypes/Date.php
+        :(exclude)src/Fieldtypes/DateFieldSelect.php
         :(exclude)src/Fieldtypes/Email.php
         :(exclude)src/Fieldtypes/Entries.php
         :(exclude)src/Fieldtypes/Floatval.php
+        :(exclude)src/Fieldtypes/Gps.php
         :(exclude)src/Fieldtypes/Hidden.php
         :(exclude)src/Fieldtypes/Html.php
         :(exclude)src/Fieldtypes/Identifier.php
         :(exclude)src/Fieldtypes/Integer.php
         :(exclude)src/Fieldtypes/Lists.php
+        :(exclude)src/Fieldtypes/MaskField.php
         :(exclude)src/Fieldtypes/Month.php
+        :(exclude)src/Fieldtypes/Name.php
+        :(exclude)src/Fieldtypes/Option.php
+        :(exclude)src/Fieldtypes/PartialDate.php
         :(exclude)src/Fieldtypes/Password.php
         :(exclude)src/Fieldtypes/Phone.php
+        :(exclude)src/Fieldtypes/Product.php
         :(exclude)src/Fieldtypes/Replicator.php
         :(exclude)src/Fieldtypes/Section.php
+        :(exclude)src/Fieldtypes/Signature.php
         :(exclude)src/Fieldtypes/Terms.php
         :(exclude)src/Fieldtypes/TermsSearchIndex.php
         :(exclude)src/Fieldtypes/Text.php
         :(exclude)src/Fieldtypes/Time.php
+        :(exclude)src/Fieldtypes/Total.php
+        :(exclude)src/Fieldtypes/Trigger.php
         :(exclude)src/Fieldtypes/TrueFalse.php
         :(exclude)src/Fieldtypes/Url.php
         :(exclude)src/Fieldtypes/Username.php
@@ -114,6 +127,8 @@ jobs:
         :(exclude)src/Rules/FieldRequiredHelper.php
         :(exclude)src/Rules/IdentifierRegex.php
         :(exclude)src/Rules/InternationalPhone.php
+        :(exclude)src/Rules/Latitude.php
+        :(exclude)src/Rules/Longitude.php
         :(exclude)src/Rules/NationalPhone.php
         :(exclude)src/Rules/ReplicatorMinSets.php
         :(exclude)src/Rules/ReplicatorRequireAtLeastOneEnabledSet.php

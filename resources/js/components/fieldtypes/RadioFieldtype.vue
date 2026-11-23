@@ -2,7 +2,7 @@
  * Fork of Statamic 6 RadioFieldtype
  * (vendor/statamic/cms/resources/js/components/fieldtypes/RadioFieldtype.vue).
  * Uses RadioGroup and Radio from @statamic/cms/ui; adds Other option via
- * OtherOptionMixin and OtherOptionInput for App\Fieldtypes\Radio.
+ * OtherOptionMixin and OtherOptionInput for UAMSWeb\Aether\Fieldtypes\Fieldtypes\Radio.
  *
  * Customizations vs source:
  *   - Root <div>: needed so RadioGroup and OtherOptionInput can be siblings;
