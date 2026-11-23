@@ -36,6 +36,18 @@ beforeEach(function (): void {
 });
 
 /**
+ * Remove the container, whose file the Stache writes under the shared fixture content directory and whose
+ * fake disk goes away with the test: a later test in the same worker would list it and fail on the missing disk.
+ */
+afterEach(function (): void {
+    $container = AssetContainer::find('images');
+
+    if ($container instanceof StatamicAssetContainer) {
+        $container->delete();
+    }
+});
+
+/**
  * Build an Assets fieldtype bound to a Field with the given config.
  *
  * @param  array<string, mixed>  $config  Field config merged over the type handle and container

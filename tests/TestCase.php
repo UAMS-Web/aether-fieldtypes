@@ -7,6 +7,7 @@ namespace UAMSWeb\Aether\Fieldtypes\Tests;
 use Illuminate\Foundation\Application;
 use Statamic\Testing\AddonTestCase;
 use UAMSWeb\Aether\Fieldtypes\ServiceProvider;
+use UAMSWeb\Aether\Fieldtypes\Tests\Support\Doubles\StubDateFieldSelect;
 
 /**
  * Base class for the Integration suite: boots a minimal Statamic through
@@ -20,6 +21,17 @@ abstract class TestCase extends AddonTestCase
      * @var string Class name of this add-on's service provider.
      */
     protected string $addonServiceProvider = ServiceProvider::class;
+
+    /**
+     * Register the fieldtypes the add-on's own fields name but another task provides.
+     */
+    #[\Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        StubDateFieldSelect::register();
+    }
 
     /**
      * Give each parallel worker its own license-check cache, after Statamic's
