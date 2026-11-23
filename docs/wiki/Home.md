@@ -12,6 +12,7 @@ The pages in this folder are skeletons, one per page shape the `github-wiki` ski
 ## Guides
 
 - [Task guide](Task-guide.md): one task, the steps, and the reference it used.
+- [Address search endpoint](Address-search-endpoint.md): the GPS address-search endpoint, its settings and the egress guard a host binds.
 
 ## Troubleshooting
 

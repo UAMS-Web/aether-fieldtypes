@@ -8,6 +8,7 @@
 **Guides**
 
 - [Task guide](Task-guide.md)
+- [Address search endpoint](Address-search-endpoint.md)
 
 **Troubleshooting**
 
