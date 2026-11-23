@@ -15,6 +15,7 @@ use UAMSWeb\Aether\Fieldtypes\Tests\Support\Fixtures\PackageE\PackageEProvider;
 use UAMSWeb\Aether\Fieldtypes\Tests\Support\Fixtures\PackageG\PackageGProvider;
 use UAMSWeb\Aether\Fieldtypes\Tests\Support\Fixtures\PackageH\PackageHProvider;
 use UAMSWeb\Aether\Fieldtypes\Tests\Support\Fixtures\PackageI\PackageIProvider;
+use UAMSWeb\Aether\Fieldtypes\Tests\Support\Fixtures\PackageJ\PackageJProvider;
 
 covers(Claim::class, OwnerMap::class, OwnershipConflict::class, OwnershipUnreadable::class, Unreadable::class);
 
@@ -465,4 +466,17 @@ it('shortens a long excerpt to sixty characters and trims the space it may end o
         'scripts/entry.js: Statamic.component('.str_repeat('n', 41),
         'scripts/entry.js: Statamic.component('.str_repeat('a', 40),
     ]);
+});
+
+it('does not take a method named import for a dynamic import', function (): void {
+    // Read a package whose entry calls `math.import(...)`, `registry?.import(path)` and `loader.import('./does-not-exist.js')`, then registers a component
+    $map = OwnerMap::fromProvider(
+        'fixture/j',
+        PackageJProvider::class,
+        __DIR__.'/../Support/Fixtures/PackageJ/',
+    );
+
+    // Expect the registration claimed and nothing reported, since neither call loads a module
+    expect(ownershipDescribe($map->claims()))->toBe(['fixture/j|Control Panel component|after-member-import'])
+        ->and($map->unreadable())->toBe([]);
 });

@@ -14,3 +14,5 @@ declare(strict_types=1);
 use UAMSWeb\Aether\Fieldtypes\Tests\TestCase;
 
 pest()->extend(TestCase::class)->in('Integration');
+
+require_once __DIR__.'/Support/TypeNarrowing.php';

@@ -39,6 +39,9 @@ class ServiceProvider extends AddonServiceProvider
      */
     public function bootAddon(): void
     {
-        // Register the add-on's behavior here
+        // Offer the public form partials under Statamic's own view namespace. Statamic looks a field's
+        // view up as `statamic::forms.fields.<handle>`, and the host's `vendor/statamic` override
+        // directory is searched before this one, so a host partial of the same name still wins.
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'statamic');
     }
 }

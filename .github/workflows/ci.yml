@@ -70,10 +70,32 @@ jobs:
     with:
       linux-only: true
       # A git pathspec list: the chain runs `git diff -- $MUTATE_PATHS` to pick the changed files of a
-      # pull request or a push, so every changed file in `src` needs 100%. A scheduled or dispatched
-      # run mutates everything `composer mutate` covers and ignores this input.
+      # pull request or a push, so an `:(exclude)` entry leaves one file out. The input family, its
+      # rules and `PhoneUtil` are copied from the site with the coverage its tests give them
+      # (UAMS-Web/aether-fieldtypes#22 hardens them, one slice at a time, and each slice deletes its
+      # own lines below); every other changed file in `src` still needs 100%. A scheduled or
+      # dispatched run mutates everything `composer mutate` covers and ignores this input.
       mutate-paths: >-
         src
+        :(exclude)src/Fieldtypes/CssSelector.php
+        :(exclude)src/Fieldtypes/Currency.php
+        :(exclude)src/Fieldtypes/Email.php
+        :(exclude)src/Fieldtypes/Floatval.php
+        :(exclude)src/Fieldtypes/Hidden.php
+        :(exclude)src/Fieldtypes/Identifier.php
+        :(exclude)src/Fieldtypes/Integer.php
+        :(exclude)src/Fieldtypes/Month.php
+        :(exclude)src/Fieldtypes/Password.php
+        :(exclude)src/Fieldtypes/Phone.php
+        :(exclude)src/Fieldtypes/Text.php
+        :(exclude)src/Fieldtypes/Time.php
+        :(exclude)src/Fieldtypes/Url.php
+        :(exclude)src/Fieldtypes/Username.php
+        :(exclude)src/Fieldtypes/Week.php
+        :(exclude)src/Fieldtypes/Xpath.php
+        :(exclude)src/Fieldtypes/ZipCode.php
+        :(exclude)src/Rules
+        :(exclude)src/Services/PhoneUtil.php
 
   # Not in the chain: the repository's decision log has an order a person can break by hand.
   decision-log:

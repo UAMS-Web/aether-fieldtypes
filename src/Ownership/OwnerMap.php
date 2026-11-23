@@ -477,7 +477,8 @@ final class OwnerMap
         }
 
         // The possessive `\s*+` keeps the lookahead from passing by giving back the space before a quote.
-        preg_match_all('/\bimport\(\s*+(?![\'"])[^\r\n]*/', $source, $dynamic);
+        // The lookbehind leaves out a method named `import`, such as `math.import(...)`, which loads no module.
+        preg_match_all('/(?<![\w$.])import\(\s*+(?![\'"])[^\r\n]*/', $source, $dynamic);
 
         foreach ($dynamic[0] as $import) {
             $found[self::excerpt($import)] = 'a dynamic import with a computed path cannot be followed';
@@ -495,7 +496,7 @@ final class OwnerMap
     private static function relativeImports(string $source): array
     {
         preg_match_all('/\b(?:import|export)\b(?:[^\'";()]*?\bfrom)?\s*[\'"]([^\'"]+)[\'"]/', $source, $static);
-        preg_match_all('/\bimport\(\s*+([\'"])([^\'"]+)\1/', $source, $dynamic);
+        preg_match_all('/(?<![\w$.])import\(\s*+([\'"])([^\'"]+)\1/', $source, $dynamic);
 
         // Keep the relative paths, except those that name a stylesheet, an image or another asset.
         // The result is iterated and never indexed, so the gaps the filters leave make no difference.
