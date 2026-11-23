@@ -113,15 +113,44 @@ return [
     | Address search
     |--------------------------------------------------------------------------
     |
-    | The shortest query the picker's address-search box sends. The search itself
-    | is answered by an endpoint the host provides at `gps/nominatim-search` in
-    | the Control Panel, with its own settings under this key.
+    | The GPS picker's address-search box geocodes a typed address through
+    | OpenStreetMap's Nominatim service. The add-on answers the box at the Control
+    | Panel route `gps/nominatim-search`, which fetches the endpoint below through
+    | the egress guard bound to `UAMSWeb\Aether\Fieldtypes\Contracts\EgressGuard`.
+    |
+    | The Nominatim Usage Policy (https://operations.osmfoundation.org/policies/nominatim/)
+    | requires an identifying `User-Agent`, at most one request per second, and
+    | result attribution. The defaults honor that; a high-volume deployment should
+    | point `MAP_NOMINATIM_ENDPOINT` at a dedicated or self-hosted instance.
     |
     */
 
     'nominatim' => [
 
+        // The one host the default egress guard allows the controller to call.
+        'endpoint' => env('MAP_NOMINATIM_ENDPOINT', 'https://nominatim.openstreetmap.org/search'),
+
+        // A descriptive identifier sent as the request User-Agent, per policy.
+        // Falls back to the app name and URL when left empty.
+        'user_agent' => env('MAP_NOMINATIM_USER_AGENT', ''),
+
+        // An optional contact email appended to each request, as the policy suggests.
+        'email' => env('MAP_NOMINATIM_EMAIL', ''),
+
+        // The application-wide ceiling on outbound requests per second.
+        'max_requests_per_second' => (int) env('MAP_NOMINATIM_MAX_RPS', 1),
+
+        // The most results requested per search.
+        'limit' => (int) env('MAP_NOMINATIM_LIMIT', 5),
+
+        // The shortest query the picker sends.
         'min_query_length' => (int) env('MAP_NOMINATIM_MIN_QUERY_LENGTH', 3),
+
+        // A comma-separated list of ISO 3166-1 alpha-2 codes that bias results.
+        'country_codes' => env('MAP_NOMINATIM_COUNTRY_CODES', 'us'),
+
+        // The outbound request timeout in seconds.
+        'timeout' => (int) env('MAP_NOMINATIM_TIMEOUT', 5),
 
     ],
 
