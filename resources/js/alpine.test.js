@@ -5,6 +5,10 @@ import * as publicEntry from './alpine.js';
 import { registerAlpineEngine } from './lib/alpine-engine.js';
 import { registerCalculationEngine } from './lib/calculation-engine.js';
 import { registerCheckboxRequiredGroup } from './lib/checkbox-required-group.js';
+import { registerOptionPricingEngine } from './lib/option-pricing-engine.js';
+import { registerProductPricingEngine } from './lib/product-pricing-engine.js';
+import { registerSignatureField } from './lib/signature-field.js';
+import { registerTotalPricingEngine } from './lib/total-pricing-engine.js';
 
 describe('the public Alpine entry', () => {
 	it('exposes registerAlpineEngine for a host to import before Alpine.start()', () => {
@@ -22,6 +26,14 @@ describe('the public Alpine entry', () => {
 		expect(publicEntry.registerCheckboxRequiredGroup).toBe(registerCheckboxRequiredGroup);
 	});
 
+	it('exposes the pricing engines and the signature component the form composite partials name', () => {
+		// The entry re-exports each function itself, not a copy
+		expect(publicEntry.registerOptionPricingEngine).toBe(registerOptionPricingEngine);
+		expect(publicEntry.registerProductPricingEngine).toBe(registerProductPricingEngine);
+		expect(publicEntry.registerTotalPricingEngine).toBe(registerTotalPricingEngine);
+		expect(publicEntry.registerSignatureField).toBe(registerSignatureField);
+	});
+
 	it('exposes nothing else yet', () => {
 		// Each fieldtype family adds its engine here as it moves in
 		expect(Object.keys(publicEntry).sort()).toEqual([
@@ -29,8 +41,12 @@ describe('the public Alpine entry', () => {
 			'registerCalculationEngine',
 			'registerCheckboxRequiredGroup',
 			'registerListField',
+			'registerOptionPricingEngine',
+			'registerProductPricingEngine',
 			'registerReplicatorField',
 			'registerReplicatorSet',
+			'registerSignatureField',
+			'registerTotalPricingEngine',
 		]);
 	});
 });

@@ -93,3 +93,38 @@ it('renders a choice partial whose calculation engine and checkbox group the add
         ->and($entry)->toContain('registerCalculationEngine')
         ->toContain('registerCheckboxRequiredGroup');
 });
+
+/**
+ * Render one of the add-on's pricing partials the way a host's form renderer hands it a field.
+ *
+ * @param  string  $partial  The partial's file name without its extension.
+ * @param  array<string, mixed>  $context  The field data the partial reads.
+ * @return string The rendered markup.
+ */
+function hostInstallRenderedPricingPartial(string $partial, array $context): string
+{
+    // Render the partial from the add-on's own views, with no site code loaded
+    return (string) Antlers::parse(
+        (string) file_get_contents(hostInstallAddonDirectory().'resources/views/forms/fields/'.$partial.'.antlers.html'),
+        ['handle' => 'pick', 'id' => 'form-pick', 'visibility' => 'visible', 'value' => '', 'error' => null, ...$context],
+        true,
+    );
+}
+
+it('renders each pricing partial with the selector its engine binds to, and the entry exports the engine', function (string $partial, array $context, string $marker, string $engine, string $selector, string $register): void {
+    // Render the partial and read the add-on's public Alpine entry and the engine file it exports from
+    $html = hostInstallRenderedPricingPartial($partial, mustBeStringKeyed($context, 'the field context'));
+    $directory = hostInstallAddonDirectory().'resources/js/';
+    $source = (string) file_get_contents($directory.'lib/'.$engine.'.js');
+    $entry = (string) file_get_contents($directory.'alpine.js');
+
+    // Expect the partial to carry the marker, the engine to bind that same selector, and the entry to export its registration
+    expect($html)->toContain($marker)
+        ->and($source)->toContain($selector)
+        ->and($source)->toContain('export function '.$register.'()')
+        ->and($entry)->toContain($register);
+})->with([
+    'option' => ['option', ['option_mode' => 'select', 'input_type' => 'select', 'options' => []], 'data-option-field', 'option-pricing-engine', "'[data-option-field]'", 'registerOptionPricingEngine'],
+    'product' => ['product', ['selection_type' => 'single', 'formatted_price' => '$10.00', 'price' => 10, 'product_options' => []], 'data-product-field', 'product-pricing-engine', "'[data-product-field]'", 'registerProductPricingEngine'],
+    'total' => ['total', ['prefix' => 'Total'], 'data-total-field', 'total-pricing-engine', "'[data-total-field]'", 'registerTotalPricingEngine'],
+]);

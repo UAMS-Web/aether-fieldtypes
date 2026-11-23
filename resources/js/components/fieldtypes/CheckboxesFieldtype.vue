@@ -2,7 +2,7 @@
  * Fork of Statamic 6 CheckboxesFieldtype
  * (vendor/statamic/cms/resources/js/components/fieldtypes/CheckboxesFieldtype.vue).
  * Uses CheckboxGroup and Checkbox from @statamic/cms/ui; adds Other option via
- * OtherOptionMixin and OtherOptionInput for App\Fieldtypes\Checkboxes.
+ * OtherOptionMixin and OtherOptionInput for UAMSWeb\Aether\Fieldtypes\Fieldtypes\Checkboxes.
  *
  * Customizations vs source:
  *   - Root <div>: needed so CheckboxGroup and OtherOptionInput can be siblings;

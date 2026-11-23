@@ -51,6 +51,18 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     /**
+     * Register the add-on's map defaults under the `maps` config key.
+     *
+     * A host's own `config/maps.php` wins for each top-level group it defines, so a site that already
+     * configures the picker is not changed.
+     */
+    #[\Override]
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/maps.php', 'maps');
+    }
+
+    /**
      * Boot the add-on once Statamic has booted.
      */
     public function bootAddon(): void

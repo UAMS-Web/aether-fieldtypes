@@ -14,6 +14,12 @@ declare(strict_types=1);
 
 return [
 
+    'decimal_valid' => 'The value must be a valid decimal number.',
+
+    'latitude' => 'The value must be a decimal number between -90.0 and 90.0.',
+
+    'longitude' => 'The value must be a decimal number between -180.0 and 180.0.',
+
     'month' => [
         'after_or_equal' => 'The month must be after or equal to :min.',
         'before_or_equal' => 'The month must be before or equal to :max.',
