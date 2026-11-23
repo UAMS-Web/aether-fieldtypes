@@ -1,0 +1,101 @@
+<?php
+
+declare(strict_types=1);
+
+use Statamic\Facades\Antlers;
+use Statamic\Fields\Fieldtype;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\CssSelector;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Currency;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Email;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Floatval;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Hidden;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Identifier;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Integer;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Month;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Password;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Phone;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Text;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Time;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Url;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Username;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Week;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Xpath;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\ZipCode;
+
+/**
+ * The public form partials the input fieldtypes ship, and the handles the add-on serves.
+ *
+ * @command  vendor/bin/pest tests/Integration/FormFieldPartialsTest.php
+ */
+it('serves every input fieldtype under the handle it replaces', function (string $handle, Fieldtype $fieldtype): void {
+    // Expect the host's fieldtype registry to resolve the handle to the add-on class, without a stand-in
+    expect($fieldtype::handle())->toBe($handle)
+        ->and(app('statamic.fieldtypes')->get($handle))->toBe($fieldtype::class);
+})->with([
+    'css_selector' => ['css_selector', new CssSelector],
+    'currency' => ['currency', new Currency],
+    'email' => ['email', new Email],
+    'float' => ['float', new Floatval],
+    'hidden' => ['hidden', new Hidden],
+    'identifier' => ['identifier', new Identifier],
+    'integer' => ['integer', new Integer],
+    'month' => ['month', new Month],
+    'password' => ['password', new Password],
+    'phone' => ['phone', new Phone],
+    'text' => ['text', new Text],
+    'time' => ['time', new Time],
+    'url' => ['url', new Url],
+    'username' => ['username', new Username],
+    'week' => ['week', new Week],
+    'xpath' => ['xpath', new Xpath],
+    'zip_code' => ['zip_code', new ZipCode],
+]);
+
+it('offers a public form partial for each handle that has one, and the default the rest render through', function (string $name): void {
+    // Expect Statamic's own view namespace to find the add-on's partial
+    expect(view()->exists('statamic::forms.fields.'.$name))->toBeTrue();
+})->with(['default', 'email', 'float', 'hidden', 'integer', 'password', 'phone', 'text', 'time', 'url', 'username']);
+
+it('resolves a fieldtype without a partial of its own to the default partial', function (): void {
+    // Expect the default partial for a handle the add-on has no partial for, and the handle's partial where it has one
+    expect((new Xpath)->view())->toBe('statamic::forms.fields.default')
+        ->and((new Email)->view())->toBe('statamic::forms.fields.email');
+});
+
+it('renders the email partial through the default partial the add-on ships', function (): void {
+    // Render a field the way Statamic's form renderer hands it to the partial
+    $html = (string) Antlers::parse(
+        file_get_contents(__DIR__.'/../../resources/views/forms/fields/email.antlers.html') ?: '',
+        [
+            'handle' => 'contact_email',
+            'id' => 'form-contact_email',
+            'type' => 'email',
+            'input_type' => 'email',
+            'visibility' => 'visible',
+            'validate' => [],
+            'value' => 'a@example.org',
+        ],
+        true,
+    );
+
+    // Expect one email input carrying the handle, the id and the value
+    expect($html)->toContain('type="email"')
+        ->toContain('name="contact_email"')
+        ->toContain('id="form-contact_email"')
+        ->toContain('value="a@example.org"');
+});
+
+it('renders a hidden input with no label markup, and honors the value', function (): void {
+    // Render the hidden partial
+    $html = (string) Antlers::parse(
+        file_get_contents(__DIR__.'/../../resources/views/forms/fields/hidden.antlers.html') ?: '',
+        ['handle' => 'token', 'id' => 'form-token', 'type' => 'hidden', 'value' => 'abc'],
+        true,
+    );
+
+    // Expect a hidden input and nothing else
+    expect($html)->toContain('type="hidden"')
+        ->toContain('name="token"')
+        ->toContain('value="abc"')
+        ->not->toContain('form-control');
+});

@@ -1,0 +1,223 @@
+<?php
+
+declare(strict_types=1);
+
+use Statamic\Facades\Antlers;
+use Statamic\Fields\Field;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Username;
+
+/**
+ * Tests for the `Username` fieldtype — the Statamic analog of Gravity Forms'
+ * User Registration add-on `username` field. Covers the fieldtype contract
+ * (selectable in forms, reuses the `custom_text` Control Panel component) and
+ * the username semantics surfaced to the public form (`autocomplete="username"`,
+ * spellcheck off) — the AC of issue UAMS-Web/uams-statamic-archive#312.
+ *
+ * Mutation: 100% on UAMSWeb\Aether\Fieldtypes\Fieldtypes\Username (75 mutants, --covered-only).
+ *
+ * @command  vendor/bin/pest tests/Integration/Fieldtypes/UsernameFieldtypeTest.php
+ */
+
+/**
+ * Resolve the `Username` fieldtype from a blueprint field of `type: username`,
+ * confirming the class is auto-discovered under the application handle.
+ */
+function usernameFieldtypeUnderTest(): Username
+{
+    // Build a blueprint field that selects the username fieldtype by handle.
+    $field = new Field(
+        'account_username',
+        [
+            'type' => 'username',
+        ]
+    );
+
+    // Confirm the handle resolves to our application fieldtype. Asserted on the call
+    // rather than the annotated variable — the `@var` below is what would make an
+    // instanceof over `$fieldtype` statically redundant.
+    expect($field->fieldtype())->toBeInstanceOf(Username::class);
+
+    /** @var Username $fieldtype */
+    $fieldtype = $field->fieldtype();
+
+    $fieldtype->setField($field);
+
+    return $fieldtype;
+}
+
+it('exposes the fieldtype contract', function (): void {
+    $fieldtype = usernameFieldtypeUnderTest();
+
+    expect($fieldtype->selectableInForms())->toBeTrue();
+    expect(Username::title())->toBe('Username');
+    expect(Username::handle())->toBe('username');
+    expect($fieldtype->component())->toBe('custom_text');
+    expect($fieldtype->icon())->toBe('user-avatar');
+});
+
+it('carries username semantics in the preload config', function (): void {
+    $config = usernameFieldtypeUnderTest()->preload()['config'];
+
+    expect(data_get($config, 'input_type'))->toBe('text');
+    expect(data_get($config, 'autocomplete'))->toBe('username');
+    expect(data_get($config, 'spellcheck'))->toBe('off');
+});
+
+it('disables autocorrect and autocapitalize via config overrides', function (): void {
+    $method = new ReflectionMethod(Username::class, 'getConfigFieldOverrides');
+
+    $overrides = $method->invoke(new Username);
+
+    expect(data_get($overrides, 'autocorrect.default'))->toBe('off');
+    expect(data_get($overrides, 'autocapitalize.default'))->toBe('off');
+    expect(data_get($overrides, 'autocomplete.default'))->toBe('username');
+});
+
+it('restricts the autocomplete keys to username', function (): void {
+    $method = new ReflectionMethod(Username::class, 'getAllowedAutocompleteKeys');
+
+    expect($method->invoke(new Username))->toBe(['username']);
+});
+
+it('renders a username input from the public form template', function (): void {
+    $template = file_get_contents(
+        __DIR__.'/../../../resources/views/forms/fields/username.antlers.html'
+    );
+
+    expect($template)->toBeString();
+
+    $out = (string) Antlers::parse(
+        is_string($template) ? $template : '',
+        [
+            'handle' => 'account_username',
+            'id' => 'form-account_username',
+            'type' => 'username',
+            'input_type' => 'text',
+            'autocomplete' => 'username',
+            'spellcheck' => 'off',
+            'visibility' => 'visible',
+            'value' => '',
+            'validate' => [],
+        ],
+        true
+    );
+
+    expect($out)->toContain('<input');
+    expect($out)->toContain('type="text"');
+    expect($out)->toContain('autocomplete="username"');
+});
+
+it('exposes its search keywords exactly', function (): void {
+    expect((new Username)->keywords())->toBe([
+        'account',
+        'handle',
+        'login',
+        'user',
+        'username',
+    ]);
+});
+
+it('belongs to its fieldtype categories exactly', function (): void {
+    expect((new Username)->categories())->toBe([
+        'text',
+        'special',
+    ]);
+});
+
+it('pins every config field override exactly', function (): void {
+    expect(new ReflectionMethod(Username::class, 'getConfigFieldOverrides')->invoke(usernameFieldtypeUnderTest()))->toBe([
+        'input_type' => [
+            'default' => 'text',
+        ],
+        'autocomplete_query' => [
+            'default' => 'on',
+        ],
+        'autocomplete' => [
+            'default' => 'username',
+        ],
+        'autocapitalize' => [
+            'default' => 'off',
+        ],
+        'autocorrect' => [
+            'default' => 'off',
+        ],
+        'spellcheck' => [
+            'default' => 'off',
+        ],
+        'writingsuggestions' => [
+            'default' => 'off',
+        ],
+        'maxlength' => [
+            'instructions' => 'Set the maximum number of characters allowed for the username.',
+        ],
+        'minlength' => [
+            'instructions' => 'Set the minimum number of characters required for the username.',
+        ],
+        'pattern' => [
+            'instructions' => 'Set a regular expression pattern for username validation.
+
+Example: `^[a-zA-Z0-9_.-]{3,20}$` to allow 3–20 letters, digits, underscores, dots, and hyphens.',
+        ],
+        'calculation_type' => [
+            'default' => 'text',
+        ],
+    ]);
+});
+
+it('unsets no config fields', function (): void {
+    expect(new ReflectionMethod(Username::class, 'getUnsetConfigFields')->invoke(usernameFieldtypeUnderTest()))->toBe([]);
+});
+
+it('pins every hidden config field handle exactly', function (): void {
+    expect(new ReflectionMethod(Username::class, 'getHiddenConfigFields')->invoke(usernameFieldtypeUnderTest()))->toBe([
+        'accept',
+        'accesskey',
+        'alt',
+        'anchor',
+        'antlers',
+        'append',
+        'autocapitalize',
+        'autocomplete',
+        'autocomplete_query',
+        'autocorrect',
+        'calculation_type',
+        'capture',
+        'checked',
+        'class',
+        'contenteditable',
+        'debounce',
+        'dir',
+        'dirname',
+        'draggable',
+        'enterkeyhint',
+        'exportparts',
+        'focus',
+        'form',
+        'id',
+        'inert',
+        'inputmode',
+        'is',
+        'itemid',
+        'itemprop',
+        'itemref',
+        'itemscope',
+        'itemtype',
+        'lang',
+        'list',
+        'name',
+        'nonce',
+        'part',
+        'popover',
+        'prepend',
+        'role',
+        'size',
+        'slot',
+        'spellcheck',
+        'style',
+        'tabindex',
+        'title',
+        'translate',
+        'virtualkeyboardpolicy',
+        'writingsuggestions',
+    ]);
+});

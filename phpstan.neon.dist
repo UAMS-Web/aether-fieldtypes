@@ -91,15 +91,7 @@ parameters:
     # site), with a comment naming the cause. Never a namespace-wide message
     # pattern. Unmatched entries fail the run (`reportUnmatchedIgnoredErrors`
     # defaults to true), so a stale ignore reds rather than rots.
-    # `applyPresetToConfigFields()` asks `method_exists($this, 'getPresets')` because a consumer opts
-    # in to presets by defining that hook. PHPStan analyses the trait once per using class, so the
-    # check is always true in a class that defines the hook and always false in one that does not;
-    # the test harness defines it, so this is the one context and the check is always true there.
     ignoreErrors:
-        -
-            identifier: function.alreadyNarrowedType
-            path: src/Traits/DefinesInputConfigFields.php
-            count: 3
     # Statamic documents `Addon::directory()` as returning `string`, but it returns null for an
     # add-on with no provider, which `OwnerMap::fromAddons()` skips; the guard is real.
         -

@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\CssSelector;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Currency;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Floatval;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Hidden;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Integer;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Phone;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Time;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Xpath;
+use UAMSWeb\Aether\Fieldtypes\Fieldtypes\ZipCode;
+
+/**
+ * Mask-suppressing fieldtypes hide every `input_mask_*` config field so the
+ * masking is driven by their own presets/defaults, not hand-edited in the CP.
+ * When UAMS-Web/uams-statamic-archive#892 replaced the eval'd `input_mask_prepareChar` code field with the
+ * declarative `input_mask_prepare_case` select, each fieldtype's hidden list
+ * had to follow — otherwise the new select renders in the Configure-Field
+ * modal (visibly so for the input_mask=true defaults like ZipCode/Currency).
+ * This locks the rename across all nine so it can't silently regress.
+ */
+it('hides input_mask_prepare_case (and not the removed input_mask_prepareChar)', function (string $fieldtype): void {
+    $method = new ReflectionMethod($fieldtype, 'getHiddenConfigFields');
+
+    $hidden = $method->invoke(new $fieldtype);
+
+    expect($hidden)
+        ->toContain('input_mask_prepare_case')
+        ->and($hidden)->not->toContain('input_mask_prepareChar');
+})->with([
+    Integer::class,
+    ZipCode::class,
+    Time::class,
+    Hidden::class,
+    Currency::class,
+    CssSelector::class,
+    Xpath::class,
+    Floatval::class,
+    Phone::class,
+]);
