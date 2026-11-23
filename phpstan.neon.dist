@@ -14,7 +14,7 @@ includes:
     # adds no dependency.
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
     # Optional, when the repository uses Mockery:
-    # - vendor/phpstan/phpstan-mockery/extension.neon
+    - vendor/phpstan/phpstan-mockery/extension.neon
     # Optional, Pest 5 only: teaches PHPStan Pest's functional API, most
     # importantly the `$this` binding inside it()/test()/beforeEach() closures,
     # and registers Pest-specific rules. `composer require --dev

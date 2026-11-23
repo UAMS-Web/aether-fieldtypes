@@ -6,3 +6,4 @@
 // The fieldtype families add their engines here as they move into the add-on.
 export { registerAlpineEngine } from './lib/alpine-engine.js'
 export { registerCalculationEngine } from './lib/calculation-engine.js'
+export { registerCheckboxRequiredGroup } from './lib/checkbox-required-group.js'
