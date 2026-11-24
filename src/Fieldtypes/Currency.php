@@ -167,7 +167,7 @@ class Currency extends Fieldtype
             ],
             // Minimum Bound for Validation
             'input_mask_min' => [
-                'display' => 'Maximum Value',
+                'display' => 'Minimum Value',
                 'default' => null,
                 'instructions' => 'Set the minimum allowed value for this field.',
                 'type' => 'float',

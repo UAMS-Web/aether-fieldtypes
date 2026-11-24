@@ -14,7 +14,22 @@ declare(strict_types=1);
 
 return [
 
+    'asset_minimum_dimensions' => [
+        'both' => ':name must be at least :min_widthx:min_height pixels; it is :widthx:height.',
+        'height' => ':name must be at least :min_height pixels tall; it is :height.',
+        'width' => ':name must be at least :min_width pixels wide; it is :width.',
+    ],
+
+    'date_boundary' => [
+        'on_or_after' => 'This date must be on or after :date.',
+        'on_or_before' => 'This date must be on or before :date.',
+        'period_unavailable' => 'This date falls within a period that is not available.',
+        'weekday_not_allowed' => 'This date falls on a day of the week that is not allowed.',
+    ],
+
     'decimal_valid' => 'The value must be a valid decimal number.',
+
+    'international_phone' => 'Enter a valid international phone number (e.g., `+1-555-555-5555`).',
 
     'latitude' => 'The value must be a decimal number between -90.0 and 90.0.',
 
@@ -23,6 +38,11 @@ return [
     'month' => [
         'after_or_equal' => 'The month must be after or equal to :min.',
         'before_or_equal' => 'The month must be before or equal to :max.',
+    ],
+
+    'national_phone' => [
+        'generic' => 'Enter a valid national phone number for :country.',
+        'with_example' => 'Enter a valid national phone number for :country (e.g., :example).',
     ],
 
     'replicator' => [

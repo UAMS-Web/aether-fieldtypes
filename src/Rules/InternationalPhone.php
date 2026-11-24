@@ -104,6 +104,6 @@ class InternationalPhone implements ValidationRule
      */
     public function message(): string
     {
-        return 'Enter a valid international phone number (e.g., `+1-555-555-5555`).';
+        return __('aether-fieldtypes::validation.international_phone');
     }
 }

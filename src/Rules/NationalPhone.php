@@ -148,10 +148,10 @@ class NationalPhone implements ValidationRule
         // Check if an example phone number is available
         if ($example) {
             // Return message with country name and example phone number
-            return sprintf('Enter a valid national phone number for %s (e.g., %s).', $countryName, $example);
+            return __('aether-fieldtypes::validation.national_phone.with_example', ['country' => $countryName, 'example' => $example]);
         }
 
         // Otherwise, return a generic message with the country name
-        return sprintf('Enter a valid national phone number for %s.', $countryName);
+        return __('aether-fieldtypes::validation.national_phone.generic', ['country' => $countryName]);
     }
 }

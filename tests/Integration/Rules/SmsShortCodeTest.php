@@ -61,5 +61,8 @@ it('leaves empty input to other rules', function (mixed $value): void {
 })->with([
     'null' => [null],
     'empty string' => [''],
-    'string zero' => ['0'],
 ]);
+
+it('rejects the string zero as a value rather than skipping it as empty', function (): void {
+    expect(smsShortCodeMessages('0'))->not->toBe([]);
+});

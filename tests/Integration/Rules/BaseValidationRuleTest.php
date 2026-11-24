@@ -59,8 +59,18 @@ it('leaves an empty value to other rules without validating it', function (mixed
 })->with([
     'null' => [null],
     'empty string' => [''],
-    'zero' => [0],
     'false' => [false],
+    'empty array' => [[]],
+]);
+
+it('validates zero as a real value rather than skipping it as empty', function (mixed $zero, string $seen): void {
+    $rule = baseRuleProbe();
+
+    expect($rule->isValid($zero))->toBeFalse()
+        ->and($rule->seen)->toBe([$seen]);
+})->with([
+    'integer zero' => [0, '=0'],
+    'string zero' => ['0', '=0'],
 ]);
 
 it('fails an array with the shared message, in validate and in isValid, without validating it', function (): void {

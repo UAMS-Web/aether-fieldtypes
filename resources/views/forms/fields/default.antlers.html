@@ -42,7 +42,7 @@
 		aria-readonly="true"
 	{{ /if }}
 	{{# `visibility: read_only` in the blueprint renders the field but blocks user
-		edits. See README.md in this directory for the per-fieldtype contract. #}}
+		edits. #}}
 	{{ if visibility == 'read_only' && calculation_query !== true }}
 		readonly
 		aria-readonly="true"

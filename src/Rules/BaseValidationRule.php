@@ -97,8 +97,8 @@ abstract class BaseValidationRule implements ValidationRule
         // to handle this case, reducing unnecessary checks
         // ---
 
-        // Check if the value is empty
-        if (! $value) {
+        // Skip null, false, an empty string and an empty array; "0" and 0 are real values
+        if (in_array($value, [null, false, '', []], true)) {
             // Return null to skip validation for empty values
             return null;
         }
