@@ -7,6 +7,18 @@
             "detail": "RemoveArrayItem=9"
         },
         {
+            "path": "src/Fieldtypes/Email.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=5"
+        },
+        {
+            "path": "src/Fieldtypes/Email.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=3"
+        },
+        {
             "path": "src/Fieldtypes/Identifier.php",
             "marker": "// @pest-mutate-ignore: RemoveArrayItem",
             "finding": "removes MORE than one mutant of a named mutator",
@@ -17,6 +29,18 @@
             "marker": "// @pest-mutate-ignore: RemoveArrayItem",
             "finding": "removes MORE than one mutant of a named mutator",
             "detail": "RemoveArrayItem=22"
+        },
+        {
+            "path": "src/Fieldtypes/Password.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=4"
+        },
+        {
+            "path": "src/Fieldtypes/Password.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=3"
         },
         {
             "path": "src/Fieldtypes/Phone.php",
@@ -35,6 +59,24 @@
             "marker": "// @pest-mutate-ignore: RemoveArrayItem",
             "finding": "removes MORE than one mutant of a named mutator",
             "detail": "RemoveArrayItem=8"
+        },
+        {
+            "path": "src/Fieldtypes/Url.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=8"
+        },
+        {
+            "path": "src/Fieldtypes/Username.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=5"
+        },
+        {
+            "path": "src/Fieldtypes/Username.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=2"
         },
         {
             "path": "src/Fieldtypes/ZipCode.php",
