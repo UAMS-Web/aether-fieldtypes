@@ -10,8 +10,8 @@ use UAMSWeb\Aether\Fieldtypes\Services\PhoneUtil;
  * @covers \UAMSWeb\Aether\Fieldtypes\Services\PhoneUtil
  *
  * Display formatting and example numbers, against the installed libphonenumber metadata.
- * The `catch` in `generateExamplePhoneNumber()` is not exercised: the library returns null
- * for an unknown region rather than throwing, and no supported input makes it throw.
+ * The `catch` in `generateExamplePhoneNumber()` is reached only with a format method the phone
+ * number class does not have, so its test calls the private method by reflection.
  *
  * @command  vendor/bin/pest tests/Integration/Services/PhoneUtilTest.php
  */
@@ -62,4 +62,23 @@ it('adds a plus to a number that has none', function (string $input, string $exp
 
 it('trims input before validating it', function (): void {
     expect(PhoneUtil::cleanInput("  +1 479 555 0100 \n"))->toBe('+1 479 555 0100');
+});
+
+it('logs the failure and returns null when an example number cannot be formatted', function (): void {
+    // A format method the phone number class lacks makes the call throw inside the try
+    Log::shouldReceive('error')->once()->withArgs(
+        fn (string $message, array $context): bool => $message === 'PhoneUtil::probe exception'
+            && array_keys($context) === ['exception']
+            && is_string($context['exception'])
+            && $context['exception'] !== ''
+    );
+
+    $method = new ReflectionMethod(PhoneUtil::class, 'generateExamplePhoneNumber');
+
+    expect($method->invoke(null, 'US', 'notAFormatMethod', 'probe'))->toBeNull();
+});
+
+it('gives no example number for a region the library does not know', function (): void {
+    expect(PhoneUtil::exampleNational('ZZ'))->toBeNull()
+        ->and(PhoneUtil::exampleInternational('ZZ'))->toBeNull();
 });
