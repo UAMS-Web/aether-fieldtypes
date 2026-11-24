@@ -30,6 +30,17 @@ function checkboxesFieldtype(array $config = []): Checkboxes
 }
 
 /**
+ * Statamic's own Checkboxes fieldtype bound to the same field, for comparing what the add-on adds.
+ */
+function checkboxesParent(Checkboxes $fieldtype): Statamic\Fieldtypes\Checkboxes
+{
+    $parent = new Statamic\Fieldtypes\Checkboxes;
+    $parent->setField(mustBe(Field::class, $fieldtype->field(), 'the field'));
+
+    return $parent;
+}
+
+/**
  * The field definitions of one config section, keyed by handle.
  *
  * @return array<string, mixed> The section's fields
@@ -44,7 +55,7 @@ function checkboxesSectionFields(string $display): array
 
     foreach ($sections as $section) {
         if (is_array($section) && ($section['display'] ?? null) === $display && is_array($section['fields'] ?? null)) {
-            return $section['fields'];
+            return mustBeStringKeyed($section['fields'], 'the section fields');
         }
     }
 
@@ -62,10 +73,6 @@ function checkboxesFailures(array $config, mixed $value): array
     $messages = [];
 
     foreach (checkboxesFieldtype()->getValidationRules(null, $config) as $rule) {
-        if (! $rule instanceof Closure) {
-            throw new UnexpectedValueException('Expected a closure rule.');
-        }
-
         $rule('choices', $value, function (string $message) use (&$messages): void {
             $messages[] = $message;
         });
@@ -157,12 +164,12 @@ it('adds the choices the form template renders to the renderable field data', fu
 
     expect($data)->toHaveKey('full_choices')
         ->and($data['full_choices'])->toBeArray()
-        ->and(array_diff_key($data, ['full_choices' => true]))->toBe((new Statamic\Fieldtypes\Checkboxes)->setField(checkboxesFieldtype()->field())->extraRenderableFieldData())
+        ->and(array_diff_key($data, ['full_choices' => true]))->toBe(checkboxesParent(checkboxesFieldtype())->extraRenderableFieldData())
         ->and($data)->not->toBe(['full_choices' => $data['full_choices']]);
 });
 
 it('adds no rules for an unlimited selection or a config with no limit', function (array $config): void {
-    expect(checkboxesFieldtype()->getValidationRules(null, $config))->toBe([]);
+    expect(checkboxesFieldtype()->getValidationRules(null, mustBeStringKeyed($config, 'the config')))->toBe([]);
 })->with([
     'no config' => [[]],
     'unlimited' => [['selection_limit' => 'unlimited', 'min_selections' => 2, 'max_selections' => 3, 'exact_selections' => 2]],
@@ -220,7 +227,7 @@ it('ignores an exact count that is missing or not numeric, or a limit that is no
 
 it('builds its field rules from the field config, after the parent rules', function (): void {
     $fieldtype = checkboxesFieldtype(['selection_limit' => 'exact', 'exact_selections' => 2]);
-    $parent = (new Statamic\Fieldtypes\Checkboxes)->setField($fieldtype->field())->rules();
+    $parent = checkboxesParent($fieldtype)->rules();
     $rules = $fieldtype->rules();
 
     expect(array_is_list($rules))->toBeTrue()
