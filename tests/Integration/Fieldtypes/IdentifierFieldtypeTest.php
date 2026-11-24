@@ -1602,3 +1602,34 @@ it("joins a string rule's arguments in Laravel form", function (array $rule, str
     'non-list arguments' => [['rule' => 'size', 'arguments' => '4'], 'size:'],
     'a non-string rule name' => [['rule' => 5], ''],
 ]);
+
+it('declares its own search keywords exactly, ahead of the preset keywords', function (): void {
+    expect(new ReflectionProperty(Identifier::class, 'keywords')->getValue(new Identifier))->toBe([
+        'classifications',
+        'classifiers',
+        'classifies',
+        'classify',
+        'code',
+        'codes',
+        'id',
+        'identification',
+        'identifications',
+        'identifier',
+        'identifiers',
+        'identifies',
+        'ids',
+        'number',
+        'numbers',
+        'symbol',
+        'symbols',
+        'uid',
+        'unique id',
+        'unique identifier',
+        'unique identifiers',
+        'unique ids',
+    ]);
+});
+
+it('belongs to its fieldtype categories exactly', function (): void {
+    expect((new Identifier)->categories())->toBe(['text', 'number', 'special']);
+});
