@@ -41,8 +41,15 @@ it('skips empty values so required can own emptiness', function (mixed $value): 
 })->with([
     'null' => [null],
     'empty string' => [''],
-    'zero' => [0],
     'false' => [false],
+    'empty array' => [[]],
+]);
+
+it('validates zero against the pattern instead of skipping it', function (mixed $zero): void {
+    expect(identifierRegexFailed($zero))->toBeTrue();
+})->with([
+    'integer zero' => [0],
+    'string zero' => ['0'],
 ]);
 
 it('accepts matching strings and rejects mismatches', function (mixed $value, bool $shouldPass): void {

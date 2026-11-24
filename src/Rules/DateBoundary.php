@@ -110,13 +110,13 @@ final class DateBoundary implements DataAwareRule, ValidationRule
             }
 
             if ($earliest instanceof CarbonImmutable && $day->lessThan($earliest)) {
-                $fail(__('This date must be on or after :date.', ['date' => $earliest->format('Y-m-d')]));
+                $fail(__('aether-fieldtypes::validation.date_boundary.on_or_after', ['date' => $earliest->format('Y-m-d')]));
 
                 return;
             }
 
             if ($latest instanceof CarbonImmutable && $day->greaterThan($latest)) {
-                $fail(__('This date must be on or before :date.', ['date' => $latest->format('Y-m-d')]));
+                $fail(__('aether-fieldtypes::validation.date_boundary.on_or_before', ['date' => $latest->format('Y-m-d')]));
 
                 return;
             }
@@ -129,8 +129,8 @@ final class DateBoundary implements DataAwareRule, ValidationRule
                     && ! \in_array((string) $day->dayOfWeek, $allowedDays, true);
 
                 $fail($onDisallowedWeekday
-                    ? __('This date falls on a day of the week that is not allowed.')
-                    : __('This date falls within a period that is not available.'));
+                    ? __('aether-fieldtypes::validation.date_boundary.weekday_not_allowed')
+                    : __('aether-fieldtypes::validation.date_boundary.period_unavailable'));
 
                 return;
             }

@@ -130,3 +130,13 @@ it('calls the fail closure once with the message, and not at all on a pass', fun
         'Enter a valid national phone number for ZZ.',
     ]);
 });
+
+it('reads the phone failure messages from the lang file so a host can override them', function (): void {
+    app('translator')->addLines([
+        'validation.international_phone' => 'Overridden international.',
+        'validation.national_phone.with_example' => 'Overridden national for :country.',
+    ], 'en', 'aether-fieldtypes');
+
+    expect((new InternationalPhone)->message())->toBe('Overridden international.')
+        ->and(new NationalPhone('US')->message())->toContain('Overridden national for');
+});

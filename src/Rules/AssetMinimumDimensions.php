@@ -185,14 +185,14 @@ class AssetMinimumDimensions implements ValidationRule
 
         // Name only the width when no height minimum is set
         if ($this->minHeight <= 0) {
-            return sprintf('%s must be at least %d pixels wide; it is %d.', $name, $this->minWidth, $width);
+            return __('aether-fieldtypes::validation.asset_minimum_dimensions.width', ['name' => $name, 'min_width' => $this->minWidth, 'width' => $width]);
         }
 
         // Name only the height when no width minimum is set
         if ($this->minWidth <= 0) {
-            return sprintf('%s must be at least %d pixels tall; it is %d.', $name, $this->minHeight, $height);
+            return __('aether-fieldtypes::validation.asset_minimum_dimensions.height', ['name' => $name, 'min_height' => $this->minHeight, 'height' => $height]);
         }
 
-        return sprintf('%s must be at least %dx%d pixels; it is %dx%d.', $name, $this->minWidth, $this->minHeight, $width, $height);
+        return __('aether-fieldtypes::validation.asset_minimum_dimensions.both', ['name' => $name, 'min_width' => $this->minWidth, 'min_height' => $this->minHeight, 'width' => $width, 'height' => $height]);
     }
 }

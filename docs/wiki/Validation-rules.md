@@ -22,7 +22,7 @@ The validation rules in `src/Rules/` (namespace `UAMSWeb\Aether\Fieldtypes\Rules
 
 Messages that come from the add-on's translation file are read through the `aether-fieldtypes` namespace, for example `__('aether-fieldtypes::validation.zip_code')`. The file is `resources/lang/en/validation.php`. Its header states the override: publish it to `lang/vendor/aether-fieldtypes/en/validation.php` in the host application and edit the message there.
 
-Not every rule reads its message from that file. The table below shows which ones do. A rule marked "hard-coded" builds its message in PHP, so the lang file cannot change it.
+Every rule except `IdentifierRegex` reads its message from that file, so a host can reword it. `IdentifierRegex` takes its message from its constructor. Up to v0.3.0, `InternationalPhone`, `NationalPhone`, `DateBoundary` and `AssetMinimumDimensions` built their messages in PHP, and the lang file could not change them; the keys below ship with the next release. The rule-summary table shows the key each one reads.
 
 The keys in `validation.php` that are not used by a class in `src/Rules/` are:
 
@@ -38,11 +38,11 @@ The keys in `validation.php` that are not used by a class in `src/Rules/` are:
 | `SmsShortCode` | `validation.sms_short_code` | `Phone` fieldtype, `sms-short-code` preset |
 | `Latitude` | `validation.decimal_valid`, `validation.latitude` | `Gps` fieldtype (`<handle>.lat`) |
 | `Longitude` | `validation.decimal_valid`, `validation.longitude` | `Gps` fieldtype (`<handle>.lng`) |
-| `InternationalPhone` | hard-coded message | `Phone` fieldtype, `tel` preset |
-| `NationalPhone` | hard-coded message | `Phone` fieldtype, `tel-national` preset |
+| `InternationalPhone` | `validation.international_phone` | `Phone` fieldtype, `tel` preset |
+| `NationalPhone` | `validation.national_phone.with_example`, `validation.national_phone.generic` | `Phone` fieldtype, `tel-national` preset |
 | `IdentifierRegex` | the message passed to the constructor | `Identifier` fieldtype, `regex` rules |
-| `DateBoundary` | hard-coded messages | `Date` fieldtype, when a boundary is configured |
-| `AssetMinimumDimensions` | hard-coded message | `Assets` fieldtype, when `min_width` or `min_height` is set on an images-only field |
+| `DateBoundary` | `validation.date_boundary.on_or_after`, `.on_or_before`, `.weekday_not_allowed`, `.period_unavailable` | `Date` fieldtype, when a boundary is configured |
+| `AssetMinimumDimensions` | `validation.asset_minimum_dimensions.width`, `.height`, `.both` | `Assets` fieldtype, when `min_width` or `min_height` is set on an images-only field |
 | `ReplicatorMinSets` | `validation.replicator.min_sets.one`, `validation.replicator.min_sets.multiple` | `Replicator` fieldtype, when `min_sets` is greater than 0 |
 | `ReplicatorRequireAtLeastOneEnabledSet` | `validation.replicator.at_least_one_enabled_set` | `Replicator` fieldtype, when the field has a required rule |
 
@@ -52,7 +52,8 @@ The keys in `validation.php` that are not used by a class in `src/Rules/` are:
 
 Before the child runs, `validate()` prepares the value:
 
-- An empty value (anything PHP treats as falsy, which includes `null`, `''`, `0` and the string `'0'`) is skipped, so a rule such as `required` decides whether emptiness is an error.
+- An empty value (`null`, `false`, the empty string or an empty array) is skipped, so a rule such as `required` decides whether emptiness is an error.
+- The integer `0` and the string `'0'` are values, not empty: they reach `validateValue()` and are checked like any other. Up to v0.3.0 they were skipped as falsy; the change ships with the next release.
 - An array value fails with the English message `The value must be a string, not an array.` This message is hard-coded and is not in the lang file.
 - Any other value is cast to a string and passed to `validateValue()`.
 
