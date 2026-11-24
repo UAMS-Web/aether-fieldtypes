@@ -3,7 +3,11 @@
 declare(strict_types=1);
 
 use Statamic\Facades\Addon;
+use UAMSWeb\Aether\Fieldtypes\Contracts\EgressGuard;
+use UAMSWeb\Aether\Fieldtypes\Http\Controllers\NominatimSearchController;
 use UAMSWeb\Aether\Fieldtypes\ServiceProvider;
+use UAMSWeb\Aether\Fieldtypes\Support\DefaultEgressGuard;
+use UAMSWeb\Aether\Fieldtypes\Tests\Support\Doubles\RecordingEgressGuard;
 
 /**
  * The add-on boots inside a minimal Statamic.
@@ -42,4 +46,41 @@ it('keeps a host group of the maps config whole, and fills in the groups the hos
     expect(config('maps.tiles'))->toBe(['url' => 'https://tiles.example.test/{z}/{x}/{y}.png'])
         ->and(config('maps.aerial.max_zoom'))->toBe(19)
         ->and(config('maps.default.zoom'))->toBe(14);
+});
+
+it('pins the address-search settings the controller reads', function (): void {
+    // Expect every key of the nominatim group, with the values the add-on ships
+    expect(config('maps.nominatim'))->toBe([
+        'endpoint' => 'https://nominatim.openstreetmap.org/search',
+        'user_agent' => '',
+        'email' => '',
+        'max_requests_per_second' => 1,
+        'limit' => 5,
+        'min_query_length' => 3,
+        'country_codes' => 'us',
+        'timeout' => 5,
+    ]);
+});
+
+it('offers the default egress guard, and leaves a guard the host already bound alone', function (): void {
+    // Expect the default through the container
+    expect(app(EgressGuard::class))->toBeInstanceOf(DefaultEgressGuard::class);
+
+    // A host binding of its own, then the provider registering again
+    $host = new RecordingEgressGuard;
+    app()->instance(EgressGuard::class, $host);
+    new ServiceProvider(app())->register();
+
+    // Expect the host's guard untouched
+    expect(app(EgressGuard::class))->toBe($host);
+});
+
+it('answers the address-search route in the Control Panel', function (): void {
+    // Expect the route under the Control Panel prefix, served by the add-on's controller
+    $route = app('router')->getRoutes()->getByName('statamic.cp.gps.nominatim-search');
+
+    expect($route)->not->toBeNull()
+        ->and($route?->uri())->toEndWith('/gps/nominatim-search')
+        ->and($route?->methods())->toContain('GET')
+        ->and($route?->getActionName())->toBe(NominatimSearchController::class);
 });
