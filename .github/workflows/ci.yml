@@ -83,7 +83,6 @@ jobs:
         :(exclude)src/Fieldtypes/Address.php
         :(exclude)src/Fieldtypes/Assets.php
         :(exclude)src/Fieldtypes/Audio.php
-        :(exclude)src/Fieldtypes/Checkboxes.php
         :(exclude)src/Fieldtypes/Consent.php
         :(exclude)src/Fieldtypes/Date.php
         :(exclude)src/Fieldtypes/DateFieldSelect.php
