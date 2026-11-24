@@ -1,6 +1,12 @@
 {
     "findings": [
         {
+            "path": "src/Fieldtypes/CssSelector.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=8"
+        },
+        {
             "path": "src/Fieldtypes/Currency.php",
             "marker": "// @pest-mutate-ignore: RemoveArrayItem",
             "finding": "removes MORE than one mutant of a named mutator",
@@ -89,6 +95,12 @@
             "marker": "// @pest-mutate-ignore: RemoveArrayItem",
             "finding": "removes MORE than one mutant of a named mutator",
             "detail": "RemoveArrayItem=3"
+        },
+        {
+            "path": "src/Fieldtypes/Xpath.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=14"
         },
         {
             "path": "src/Fieldtypes/ZipCode.php",
