@@ -94,7 +94,6 @@ jobs:
         :(exclude)src/Fieldtypes/Gps.php
         :(exclude)src/Fieldtypes/Hidden.php
         :(exclude)src/Fieldtypes/Html.php
-        :(exclude)src/Fieldtypes/Identifier.php
         :(exclude)src/Fieldtypes/Integer.php
         :(exclude)src/Fieldtypes/Lists.php
         :(exclude)src/Fieldtypes/MaskField.php
@@ -123,7 +122,6 @@ jobs:
         :(exclude)src/Rules/BaseValidationRule.php
         :(exclude)src/Rules/DateBoundary.php
         :(exclude)src/Rules/FieldRequiredHelper.php
-        :(exclude)src/Rules/IdentifierRegex.php
         :(exclude)src/Rules/Latitude.php
         :(exclude)src/Rules/Longitude.php
         :(exclude)src/Rules/ReplicatorMinSets.php

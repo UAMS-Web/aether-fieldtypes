@@ -107,6 +107,9 @@ class Identifier extends Fieldtype
      *
      * @var array<string> Categories this fieldtype belongs to in the Statamic fieldtype selector
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/IdentifierFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     public $categories = [
         'text',
         'number',
@@ -1305,6 +1308,9 @@ class Identifier extends Fieldtype
      *
      * @var array<string> Search keywords used to find this fieldtype in the Control Panel
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/IdentifierFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $keywords = [
         'classifications',
         'classifiers',

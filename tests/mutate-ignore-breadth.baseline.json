@@ -7,6 +7,18 @@
             "detail": "RemoveArrayItem=9"
         },
         {
+            "path": "src/Fieldtypes/Identifier.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=3"
+        },
+        {
+            "path": "src/Fieldtypes/Identifier.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=22"
+        },
+        {
             "path": "src/Fieldtypes/Phone.php",
             "marker": "// @pest-mutate-ignore: RemoveArrayItem",
             "finding": "removes MORE than one mutant of a named mutator",
