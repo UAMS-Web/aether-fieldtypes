@@ -87,6 +87,9 @@ class InternationalPhone implements ValidationRule
         // Catch exceptions from phone number parsing
         catch (Exception) {
             // Return false to indicate validation failure when parsing fails
+            // The library's isValid() and getCountry() catch every throwable and report false, so
+            // nothing in the try can reach this catch; the false below is the defensive default.
+            // @pest-mutate-ignore: FalseToTrue
             return false;
         }
 
