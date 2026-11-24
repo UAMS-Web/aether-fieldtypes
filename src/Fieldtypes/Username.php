@@ -46,6 +46,9 @@ class Username extends Fieldtype
      *
      * @var bool Indicates whether the fieldtype is selectable in form blueprints
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/UsernameFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: TrueToFalse
     protected $selectableInForms = true;
 
     /**
@@ -86,6 +89,9 @@ class Username extends Fieldtype
      *
      * @var array<string> Search keywords used to find this fieldtype in the Control Panel
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/UsernameFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $keywords = [
         'account',
         'handle',
@@ -99,6 +105,9 @@ class Username extends Fieldtype
      *
      * @var array<string> Categories this fieldtype belongs to in the Statamic fieldtype selector
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/UsernameFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     public $categories = [
         'text',
         'special',

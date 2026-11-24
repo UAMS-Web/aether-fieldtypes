@@ -264,7 +264,8 @@ class Text extends BaseText
         // Initialize the rules array
         $rules = [];
 
-        // Return the rules
+        // The rules are already the empty array, so returning an empty array instead is the same value.
+        // @pest-mutate-ignore: AlwaysReturnEmptyArray
         return $rules;
     }
 }
