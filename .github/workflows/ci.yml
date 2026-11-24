@@ -93,7 +93,6 @@ jobs:
         :(exclude)src/Fieldtypes/Html.php
         :(exclude)src/Fieldtypes/Lists.php
         :(exclude)src/Fieldtypes/MaskField.php
-        :(exclude)src/Fieldtypes/Month.php
         :(exclude)src/Fieldtypes/Name.php
         :(exclude)src/Fieldtypes/Option.php
         :(exclude)src/Fieldtypes/PartialDate.php
@@ -103,12 +102,10 @@ jobs:
         :(exclude)src/Fieldtypes/Signature.php
         :(exclude)src/Fieldtypes/Terms.php
         :(exclude)src/Fieldtypes/TermsSearchIndex.php
-        :(exclude)src/Fieldtypes/Time.php
         :(exclude)src/Fieldtypes/Total.php
         :(exclude)src/Fieldtypes/Trigger.php
         :(exclude)src/Fieldtypes/TrueFalse.php
         :(exclude)src/Fieldtypes/Video.php
-        :(exclude)src/Fieldtypes/Week.php
         :(exclude)src/Fieldtypes/Xpath.php
         :(exclude)src/Rules/AssetMinimumDimensions.php
         :(exclude)src/Rules/BaseValidationRule.php

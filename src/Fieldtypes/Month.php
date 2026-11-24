@@ -52,6 +52,9 @@ class Month extends Fieldtype
      *
      * @var array<string> Keywords used to find this fieldtype in the Control Panel selector
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/MonthFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $keywords = [
         'calendar',
         'date',
@@ -63,6 +66,9 @@ class Month extends Fieldtype
      *
      * @var array<string> Categories this fieldtype belongs to in the Statamic fieldtype selector
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/MonthFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: RemoveArrayItem
     public $categories = [
         'special',
     ];
