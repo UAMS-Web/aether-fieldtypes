@@ -85,7 +85,6 @@ jobs:
         :(exclude)src/Fieldtypes/Audio.php
         :(exclude)src/Fieldtypes/Checkboxes.php
         :(exclude)src/Fieldtypes/Consent.php
-        :(exclude)src/Fieldtypes/CssSelector.php
         :(exclude)src/Fieldtypes/Date.php
         :(exclude)src/Fieldtypes/DateFieldSelect.php
         :(exclude)src/Fieldtypes/Entries.php
@@ -109,7 +108,6 @@ jobs:
         :(exclude)src/Fieldtypes/TrueFalse.php
         :(exclude)src/Fieldtypes/Video.php
         :(exclude)src/Fieldtypes/Week.php
-        :(exclude)src/Fieldtypes/Xpath.php
         :(exclude)src/Rules/AssetMinimumDimensions.php
         :(exclude)src/Rules/BaseValidationRule.php
         :(exclude)src/Rules/DateBoundary.php
