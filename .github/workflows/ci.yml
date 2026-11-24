@@ -106,7 +106,6 @@ jobs:
         :(exclude)src/Fieldtypes/TrueFalse.php
         :(exclude)src/Fieldtypes/Video.php
         :(exclude)src/Rules/AssetMinimumDimensions.php
-        :(exclude)src/Rules/BaseValidationRule.php
         :(exclude)src/Rules/DateBoundary.php
         :(exclude)src/Rules/FieldRequiredHelper.php
         :(exclude)src/Rules/Latitude.php
