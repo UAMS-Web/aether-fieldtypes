@@ -89,10 +89,8 @@ jobs:
         :(exclude)src/Fieldtypes/Date.php
         :(exclude)src/Fieldtypes/DateFieldSelect.php
         :(exclude)src/Fieldtypes/Entries.php
-        :(exclude)src/Fieldtypes/Floatval.php
         :(exclude)src/Fieldtypes/Gps.php
         :(exclude)src/Fieldtypes/Html.php
-        :(exclude)src/Fieldtypes/Integer.php
         :(exclude)src/Fieldtypes/Lists.php
         :(exclude)src/Fieldtypes/MaskField.php
         :(exclude)src/Fieldtypes/Name.php
