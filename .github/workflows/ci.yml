@@ -89,11 +89,9 @@ jobs:
         :(exclude)src/Fieldtypes/Currency.php
         :(exclude)src/Fieldtypes/Date.php
         :(exclude)src/Fieldtypes/DateFieldSelect.php
-        :(exclude)src/Fieldtypes/Email.php
         :(exclude)src/Fieldtypes/Entries.php
         :(exclude)src/Fieldtypes/Floatval.php
         :(exclude)src/Fieldtypes/Gps.php
-        :(exclude)src/Fieldtypes/Hidden.php
         :(exclude)src/Fieldtypes/Html.php
         :(exclude)src/Fieldtypes/Integer.php
         :(exclude)src/Fieldtypes/Lists.php
@@ -102,20 +100,16 @@ jobs:
         :(exclude)src/Fieldtypes/Name.php
         :(exclude)src/Fieldtypes/Option.php
         :(exclude)src/Fieldtypes/PartialDate.php
-        :(exclude)src/Fieldtypes/Password.php
         :(exclude)src/Fieldtypes/Product.php
         :(exclude)src/Fieldtypes/Replicator.php
         :(exclude)src/Fieldtypes/Section.php
         :(exclude)src/Fieldtypes/Signature.php
         :(exclude)src/Fieldtypes/Terms.php
         :(exclude)src/Fieldtypes/TermsSearchIndex.php
-        :(exclude)src/Fieldtypes/Text.php
         :(exclude)src/Fieldtypes/Time.php
         :(exclude)src/Fieldtypes/Total.php
         :(exclude)src/Fieldtypes/Trigger.php
         :(exclude)src/Fieldtypes/TrueFalse.php
-        :(exclude)src/Fieldtypes/Url.php
-        :(exclude)src/Fieldtypes/Username.php
         :(exclude)src/Fieldtypes/Video.php
         :(exclude)src/Fieldtypes/Week.php
         :(exclude)src/Fieldtypes/Xpath.php

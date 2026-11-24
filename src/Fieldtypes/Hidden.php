@@ -39,6 +39,9 @@ class Hidden extends BaseHidden
      *
      * @var bool Indicates whether the fieldtype is selectable in form blueprints
      */
+    // A property default holds no executable line, so coverage reports it uncovered although
+    // tests/Integration/Fieldtypes/HiddenFieldtypeTest.php pins the value.
+    // @pest-mutate-ignore: TrueToFalse
     protected $selectableInForms = true;
 
     /**
