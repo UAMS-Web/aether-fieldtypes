@@ -9,7 +9,8 @@ use UAMSWeb\Aether\Fieldtypes\Fieldtypes\Currency;
 /**
  * Tests for UAMSWeb\Aether\Fieldtypes\Fieldtypes\Currency preload masks, CP metadata, and config maps.
  *
- * Mutation: 100% on UAMSWeb\Aether\Fieldtypes\Fieldtypes\Currency (--covered-only).
+ * Mutation: 100% on UAMSWeb\Aether\Fieldtypes\Fieldtypes\Currency without --covered-only; the keyword and
+ * category property defaults are pinned here and annotated in the class.
  *
  * @command  vendor/bin/pest tests/Integration/Fieldtypes/CurrencyFieldtypeTest.php
  */
@@ -439,4 +440,22 @@ it('exposes fieldtype_handle alongside preload config', function (): void {
     expect($preload)->toHaveKeys(['config', 'fieldtype_handle'])
         ->and($preload['fieldtype_handle'])->toBe('currency')
         ->and(mustBeArray($preload['config'], 'the preload config')['handle'])->toBe('price');
+});
+
+it('declares its search keywords exactly', function (): void {
+    expect(new ReflectionProperty(Currency::class, 'keywords')->getValue(new Currency))->toBe([
+        'currency',
+        'money',
+        'price',
+        'cost',
+        'amount',
+        'value',
+        'total',
+        'subtotal',
+        'tax',
+    ]);
+});
+
+it('belongs to its fieldtype categories exactly', function (): void {
+    expect(new ReflectionProperty(Currency::class, 'categories')->getValue(new Currency))->toBe(['special']);
 });

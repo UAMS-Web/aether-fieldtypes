@@ -86,7 +86,6 @@ jobs:
         :(exclude)src/Fieldtypes/Checkboxes.php
         :(exclude)src/Fieldtypes/Consent.php
         :(exclude)src/Fieldtypes/CssSelector.php
-        :(exclude)src/Fieldtypes/Currency.php
         :(exclude)src/Fieldtypes/Date.php
         :(exclude)src/Fieldtypes/DateFieldSelect.php
         :(exclude)src/Fieldtypes/Email.php
