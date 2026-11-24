@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use UAMSWeb\Aether\Fieldtypes\Rules\BaseValidationRule;
+use UAMSWeb\Aether\Fieldtypes\Tests\Support\Doubles\RecordingValidationRule;
 
 /**
  * Tests for UAMSWeb\Aether\Fieldtypes\Rules\BaseValidationRule: the shared value preparation and the
@@ -13,27 +14,11 @@ use UAMSWeb\Aether\Fieldtypes\Rules\BaseValidationRule;
 covers(BaseValidationRule::class);
 
 /**
- * A rule that accepts only the string `ok`, and records every value it was asked to check.
+ * A rule that accepts only the string `ok`, and records what it was asked to check.
  */
-function baseRuleProbe(): BaseValidationRule
+function baseRuleProbe(): RecordingValidationRule
 {
-    return new class extends BaseValidationRule
-    {
-        /**
-         * @var list<string> Every value validateValue received
-         */
-        public array $seen = [];
-
-        #[Override]
-        protected function validateValue(string $attribute, string $value, Closure $fail): void
-        {
-            $this->seen[] = $attribute.'='.$value;
-
-            if ($value !== 'ok') {
-                $fail('not ok');
-            }
-        }
-    };
+    return new RecordingValidationRule;
 }
 
 /**
