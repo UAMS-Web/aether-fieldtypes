@@ -1,26 +1,36 @@
-Replace this paragraph with what the add-on does and who it is for.
+Aether Fieldtypes is the shared fieldtype add-on for UAMS Statamic sites. It supplies the form fieldtypes, their Control Panel components, the public form partials, the validation rules, the Alpine helper that the partials rely on, and an owner check that keeps each fieldtype handle with exactly one package.
 
-This wiki holds the documentation: a walkthrough, task guides by role, the reference, and troubleshooting. The [README](https://github.com/UAMS-Web/aether-fieldtypes#readme) keeps an overview, the requirements and installation.
-
-The pages in this folder are skeletons, one per page shape the `github-wiki` skill describes. Copy each, fill it in, rename it for its subject, and keep Home, the sidebar and the footer listing the same pages under the same labels.
+This wiki holds the long-form documentation: a walkthrough, task guides, troubleshooting and a reference for everything release `v0.3.0` ships. The [README](https://github.com/UAMS-Web/aether-fieldtypes#readme) keeps the overview, the requirements and installation.
 
 ## Getting started
 
 - [Installation (README)](https://github.com/UAMS-Web/aether-fieldtypes#installation): add the package to a Statamic install.
-- [Walkthrough](Walkthrough.md): a first use of the add-on, from nothing to a visible result.
+- [Walkthrough](Walkthrough.md): from a fresh install to a rendered form field.
 
 ## Guides
 
-- [Task guide](Task-guide.md): one task, the steps, and the reference it used.
-- [Address search endpoint](Address-search-endpoint.md): the GPS address-search endpoint, its settings and the egress guard a host binds.
+- [Check that every handle has one owner](Check-handle-ownership.md): run the owner check from a host's test suite.
+- [Address search endpoint](Address-search-endpoint.md): the GPS address-search endpoint, its settings and the egress guard a host binds (not yet released).
+
+## Fieldtypes
+
+- [Text and number fieldtypes](Fieldtypes-text-and-numbers.md): `text`, `email`, `url`, `password`, `username`, `hidden`, `identifier`, `css_selector`, `xpath`, `mask_field`, `zip_code`, `phone`, `integer`, `float`, `currency`.
+- [Choice fieldtypes](Fieldtypes-choices.md): `checkboxes`, `radio`, `select`, `option`, `true_false`, `consent`, `trigger`, `terms`, `terms_search_index`, `entries`, `list`.
+- [Date and time fieldtypes](Fieldtypes-dates-and-times.md): `date`, `date_field_select`, `partial_date`, `month`, `week`, `time`.
+- [Composite, media and layout fieldtypes](Fieldtypes-composite-media-and-layout.md): `address`, `gps`, `name`, `assets`, `audio`, `video`, `signature`, `replicator`, `section`, `subsection`, `html`, `product`, `total`.
+
+## Reference
+
+- [Validation rules](Validation-rules.md): every rule class and the asset file-size scope.
+- [Choice submission limits](Choice-submission-limits.md): the per-choice cap and the listener that enforces it.
+- [Form field partials](Form-field-partials.md): the public Antlers partials and how a host overrides one.
+- [Map settings](Map-settings.md): the `maps` configuration the GPS picker reads.
+- [Alpine helper](Alpine-helper.md): the entry a host imports and the engines it registers.
+- [Owner check](Owner-check.md): `OwnerMap`, its results and its messages.
 
 ## Troubleshooting
 
 - [Troubleshooting](Troubleshooting.md): one entry per symptom, with its cause and fix.
-
-## Reference
-
-- [Reference](Reference.md): every setting, tag, command or permission of one area.
 
 ## Project
 
