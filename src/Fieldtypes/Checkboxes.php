@@ -106,6 +106,10 @@ class Checkboxes extends BaseCheckboxes
         // Narrow the parent's untyped return to a string for the declared type
         $icon = parent::icon();
 
+        // The parent icon is always a string, so the cast changes nothing and the empty-string branch
+        // is never taken; the guard only narrows the type for PHPStan.
+        // @pest-mutate-ignore: RemoveStringCast
+        // @pest-mutate-ignore: EmptyStringToNotEmpty
         return \is_scalar($icon) ? (string) $icon : '';
     }
 
@@ -266,6 +270,8 @@ class Checkboxes extends BaseCheckboxes
         /** @var array<string, mixed> $config */
         $config = $field->config();
 
+        // Both merged lists are already zero-indexed lists, so re-indexing the result is a no-op.
+        // @pest-mutate-ignore: UnwrapArrayValues
         return array_values(array_merge(parent::rules(), $this->getValidationRules(null, $config)));
     }
 
