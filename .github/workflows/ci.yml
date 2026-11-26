@@ -71,6 +71,11 @@ jobs:
     if: vars.RUN_REMOTE_CI != 'false'
     with:
       linux-only: true
+      # A pull request mutates the whole of every changed file, and `src/Traits/DefinesInputConfigFields.php`
+      # is about 1,800 lines of config-field arrays: its run was cancelled at the default 45 minutes
+      # on UAMS-Web/aether-fieldtypes#144. A scheduled or dispatched run takes
+      # `mutate-full-timeout-minutes` instead.
+      mutate-timeout-minutes: 180
       # A git pathspec list: the chain runs `git diff -- $MUTATE_PATHS` to pick the changed files of a
       # pull request or a push, so an `:(exclude)` entry leaves one file out. The input family, its
       # rules and `PhoneUtil` are copied from the site with the coverage its tests give them
