@@ -90,16 +90,16 @@ it('takes every attribute a builder leaves open from the override, and only the 
     expect($notOverridden)->toBe($fixed);
 })->with([
     'html attributes' => ['htmlAttributeConfigFields', 'input-html-attribute-config-fields.json', [
-        'autocapitalize.internal',
+        'autocapitalize.internal_when_hidden',
         'autocomplete_query.options',
         'autocomplete_query.internal',
         'autocomplete.options',
-        'autocorrect.internal',
-        'inputmode.internal',
-        'minlength.internal',
+        'autocorrect.internal_when_hidden',
+        'inputmode.internal_when_hidden',
+        'minlength.internal_when_hidden',
         'max.internal',
-        'maxlength.internal',
-        'pattern.internal',
+        'maxlength.internal_when_hidden',
+        'pattern.internal_when_hidden',
         'spellcheck.options',
         'calculation_query.display',
         'calculation_query.instructions',

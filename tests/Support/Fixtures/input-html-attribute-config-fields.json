@@ -52,7 +52,7 @@
             "input_type": "contains_any button,checkbox,color,date,datetime-local,file,hidden,image,month,number,radio,range,reset,search,submit,tel,text,time,week"
         },
         "validate": null,
-        "internal": true,
+        "internal_when_hidden": true,
         "section": "accessibility"
     },
     "autocapitalize_setting": {
@@ -168,7 +168,7 @@
             "off": "Off",
             "null": "Not Specified"
         },
-        "internal": true,
+        "internal_when_hidden": true,
         "validate": null,
         "section": "accessibility"
     },
@@ -412,7 +412,7 @@
             "url": "URL: A keypad optimized for entering URLs",
             "null": "Not Specified"
         },
-        "internal": true,
+        "internal_when_hidden": true,
         "validate": null,
         "section": "accessibility"
     },
@@ -504,7 +504,7 @@
         "if": {
             "input_type": "contains_any email,password,search,tel,text,url"
         },
-        "internal": true,
+        "internal_when_hidden": true,
         "validate": null,
         "section": "constraints"
     },
@@ -528,7 +528,7 @@
         "if": {
             "input_type": "contains_any email,password,search,tel,text,url"
         },
-        "internal": true,
+        "internal_when_hidden": true,
         "validate": null,
         "section": "constraints"
     },
@@ -576,7 +576,7 @@
             "input_type": "contains_any email,password,search,tel,text,url"
         },
         "validate": null,
-        "internal": true,
+        "internal_when_hidden": true,
         "section": "constraints"
     },
     "popover": {

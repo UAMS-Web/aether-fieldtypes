@@ -331,3 +331,18 @@ it('preloads the processed config and the fieldtype handle', function (): void {
         'fieldtype_handle' => 'builds_preload_config_harness',
     ]);
 });
+
+it('strips a key flagged internal when hidden only where the fieldtype hides the field', function (): void {
+    $harness = preloadHarness(presets: true);
+    $harness->fieldItems = [
+        ['display' => 'Main', 'fields' => [
+            'offered' => ['type' => 'text', 'internal_when_hidden' => true],
+            'hidden_flagged' => ['type' => 'hidden', 'internal_when_hidden' => true],
+            'hidden_plain' => ['type' => 'hidden'],
+            'internal_flagged' => ['type' => 'text', 'internal' => true],
+        ]],
+    ];
+
+    expect(processedPreload(['offered' => 'o', 'hidden_flagged' => 'h', 'hidden_plain' => 'p', 'internal_flagged' => 'i'], $harness))
+        ->toBe(['offered' => 'o', 'hidden_plain' => 'p']);
+});

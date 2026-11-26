@@ -456,8 +456,15 @@ trait BuildsPreloadConfig
             ) {
                 // Loop through fields in this section
                 foreach ($section['fields'] as $key => $field) {
-                    // Check if field is marked as internal
-                    if (\is_array($field) && ! empty($field['internal'])) {
+                    // Check if field is marked as internal, or as internal only
+                    // where the fieldtype hides it (an offered field passes through)
+                    if (
+                        \is_array($field)
+                        && (
+                            ! empty($field['internal'])
+                            || (! empty($field['internal_when_hidden']) && ($field['type'] ?? null) === 'hidden')
+                        )
+                    ) {
                         // Add field key to internal keys array
                         $internalKeys[] = $key;
                     }

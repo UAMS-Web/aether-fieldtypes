@@ -172,9 +172,12 @@ class Week extends Fieldtype
             'itemtype',
             'lang',
             'list',
+            'maxlength', // Not applicable to month and week inputs
+            'minlength', // Not applicable to month and week inputs
             'name',
             'nonce',
             'part',
+            'pattern', // Not applicable to month and week inputs
             'popover',
             'prepend',
             'role',

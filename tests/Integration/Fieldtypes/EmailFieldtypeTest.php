@@ -174,3 +174,18 @@ it('validates its content with its rule', function (): void {
         ->and(Validator::make(['value' => 'web@uams.edu'], ['value' => $rules])->passes())->toBeTrue()
         ->and(Validator::make(['value' => 'not-an-email'], ['value' => $rules])->passes())->toBeFalse();
 });
+
+it('keeps the options it hides out of preload, so the input does not receive them', function (): void {
+    // Preload a config carrying every option Email hides
+    $config = emailFieldtype([
+        'maxlength' => 5,
+        'minlength' => 2,
+        'pattern' => '[a-z]+',
+        'inputmode' => 'numeric',
+        'autocapitalize' => 'words',
+        'autocorrect' => 'off',
+    ])->preload()['config'];
+
+    // Expect none of them to reach the input
+    expect($config)->not->toHaveKeys(['maxlength', 'minlength', 'pattern', 'inputmode', 'autocapitalize', 'autocorrect']);
+});

@@ -445,7 +445,7 @@ trait DefinesInputConfigFields
                 'input_type' => 'contains_any button,checkbox,color,date,datetime-local,file,hidden,image,month,number,radio,range,reset,search,submit,tel,text,time,week',
             ],
             'validate' => $overrides['autocapitalize']['validate'] ?? null,
-            'internal' => true, // Only internal until we have support for this prop
+            'internal_when_hidden' => true, // Stripped from preload only where a fieldtype hides this field
             'section' => 'accessibility',
         ], 'autocapitalize_setting' => [
             'display' => $overrides['autocapitalize_setting']['display'] ?? 'Autocapitalize Setting',
@@ -501,7 +501,7 @@ trait DefinesInputConfigFields
                 'off' => 'Off',
                 'null' => 'Not Specified',
             ],
-            'internal' => true, // Only internal until we have support for this prop
+            'internal_when_hidden' => true, // Stripped from preload only where a fieldtype hides this field
             'validate' => $overrides['autocorrect']['validate'] ?? null,
             'section' => 'accessibility',
         ], 'focus' => [
@@ -730,7 +730,7 @@ trait DefinesInputConfigFields
                 'url' => 'URL: A keypad optimized for entering URLs',
                 'null' => 'Not Specified',
             ],
-            'internal' => true, // Only internal until we have support for this prop
+            'internal_when_hidden' => true, // Stripped from preload only where a fieldtype hides this field
             'validate' => $overrides['inputmode']['validate'] ?? null,
             'section' => 'accessibility',
         ], 'is' => [
@@ -810,7 +810,7 @@ trait DefinesInputConfigFields
             'if' => [
                 'input_type' => 'contains_any email,password,search,tel,text,url',
             ],
-            'internal' => true, // Only internal until we have support for this prop
+            'internal_when_hidden' => true, // Stripped from preload only where a fieldtype hides this field
             'validate' => $overrides['minlength']['validate'] ?? null,
             'section' => 'constraints',
         ], 'max' => [
@@ -821,7 +821,7 @@ trait DefinesInputConfigFields
             'if' => [
                 'input_type' => 'contains_any date,datetime-local,month,number,range,time,week',
             ],
-            'internal' => true, // Only internal until we have support for this prop
+            'internal' => true, // Only internal until the min and max decision lands (UAMS-Web/aether-fieldtypes#126)
             'validate' => $overrides['max']['validate'] ?? null,
             'section' => 'constraints',
         ], 'maxlength' => [
@@ -832,7 +832,7 @@ trait DefinesInputConfigFields
             'if' => [
                 'input_type' => 'contains_any email,password,search,tel,text,url',
             ],
-            'internal' => true, // Only internal until we have support for this prop
+            'internal_when_hidden' => true, // Stripped from preload only where a fieldtype hides this field
             'validate' => $overrides['maxlength']['validate'] ?? null,
             'section' => 'constraints',
         ], 'multiple' => [
@@ -879,7 +879,7 @@ trait DefinesInputConfigFields
                 'input_type' => 'contains_any email,password,search,tel,text,url',
             ],
             'validate' => $overrides['pattern']['validate'] ?? null,
-            'internal' => true, // Only internal until we have support for this prop
+            'internal_when_hidden' => true, // Stripped from preload only where a fieldtype hides this field
             'section' => 'constraints',
         ], 'popover' => [
             'display' => $overrides['popover']['display'] ?? 'Popover Behavior (popover attribute)',
