@@ -162,3 +162,31 @@ it('pins every hidden config field handle exactly', function (): void {
 it('adds no validation rules of its own', function (): void {
     expect(textFieldtype()->rules())->toBe([]);
 });
+
+it('passes the options its Control Panel offers on to the input through preload', function (): void {
+    // Preload the config an editor would save from the options Text offers
+    $config = textFieldtype([
+        'maxlength' => 5,
+        'minlength' => 2,
+        'inputmode' => 'numeric',
+        'autocapitalize' => 'words',
+        'autocorrect' => 'off',
+    ])->preload()['config'];
+
+    // Expect each offered option to reach the Control Panel input
+    expect($config)->toMatchArray([
+        'maxlength' => 5,
+        'minlength' => 2,
+        'inputmode' => 'numeric',
+        'autocapitalize' => 'words',
+        'autocorrect' => 'off',
+    ]);
+});
+
+it('keeps the keys that only control the Control Panel out of preload', function (): void {
+    // Preload a config carrying keys Text offers as controls, not as input attributes
+    $config = textFieldtype(['autocomplete_query' => 'name', 'max' => 9])->preload()['config'];
+
+    // Expect neither to reach the input
+    expect($config)->not->toHaveKeys(['autocomplete_query', 'max']);
+});

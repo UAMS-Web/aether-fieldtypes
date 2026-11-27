@@ -181,3 +181,14 @@ it('pins every hidden config field handle exactly', function (): void {
         'writingsuggestions',
     ]);
 });
+
+it('passes the length and pattern options it offers on to the input through preload', function (): void {
+    // Preload the config an editor would save from the options Password offers
+    $fieldtype = new Password;
+    $fieldtype->setField(new Field('account_password', ['type' => 'password', 'maxlength' => 64, 'minlength' => 12, 'pattern' => '[A-Za-z0-9]+']));
+
+    $config = $fieldtype->preload()['config'];
+
+    // Expect each offered option to reach the Control Panel input
+    expect($config)->toMatchArray(['maxlength' => 64, 'minlength' => 12, 'pattern' => '[A-Za-z0-9]+']);
+});

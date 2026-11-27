@@ -154,3 +154,59 @@ it('claims the Control Panel components of Checkboxes and Radio, and none for Se
     expect($own)->toContain(Claim::COMPONENT.'|custom_checkboxes-fieldtype', Claim::COMPONENT.'|custom_radio-fieldtype')
         ->and($own)->not->toContain(Claim::COMPONENT.'|select-fieldtype', Claim::COMPONENT.'|custom_select-fieldtype');
 });
+
+it('renders the Text partial with the length, input hint and capitalization options the editor set', function (): void {
+    // Render a Text field carrying each option, with the input hint left unspecified
+    $html = renderTextPartial(['maxlength' => 5, 'minlength' => 2, 'autocapitalize' => 'words', 'autocorrect' => 'off', 'inputmode' => 'numeric']);
+
+    // Expect each option as an attribute on the input
+    expect($html)->toContain('maxlength="5"')
+        ->toContain('minlength="2"')
+        ->toContain('autocapitalize="words"')
+        ->toContain('autocorrect="off"')
+        ->toContain('inputmode="numeric"');
+});
+
+it('renders one maxlength on the Text partial, taking character_limit over maxlength', function (): void {
+    // Render a Text field with both options set
+    $html = renderTextPartial(['maxlength' => 5, 'character_limit' => 7]);
+
+    // Expect the character limit to win and the attribute to appear once
+    expect($html)->toContain('maxlength="7"')
+        ->not->toContain('maxlength="5"')
+        ->and(substr_count($html, 'maxlength='))->toBe(1);
+});
+
+it('leaves the Text partial attributes off when the options are unset or Not Specified', function (): void {
+    // Render a Text field whose options are the Not Specified string and null
+    $html = renderTextPartial(['autocapitalize' => 'null', 'autocorrect' => 'null', 'inputmode' => 'null', 'minlength' => null]);
+
+    // Expect no attribute for any of them
+    expect($html)->not->toContain('autocapitalize=')
+        ->not->toContain('autocorrect=')
+        ->not->toContain('inputmode=')
+        ->not->toContain('minlength=')
+        ->not->toContain('maxlength=');
+});
+
+/**
+ * Render the Text partial the way Statamic's form renderer hands it a field.
+ *
+ * @param  array<string, mixed>  $extra  Field config merged over the base field
+ */
+function renderTextPartial(array $extra): string
+{
+    return (string) Antlers::parse(
+        file_get_contents(__DIR__.'/../../resources/views/forms/fields/text.antlers.html') ?: '',
+        array_merge([
+            'handle' => 'nickname',
+            'id' => 'form-nickname',
+            'type' => 'text',
+            'input_type' => 'text',
+            'visibility' => 'visible',
+            'validate' => [],
+            'value' => '',
+        ], $extra),
+        true,
+    );
+}

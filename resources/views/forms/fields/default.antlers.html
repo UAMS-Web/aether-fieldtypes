@@ -17,7 +17,9 @@
 	{{ placeholder | attribute:placeholder }}
 	{{ character_limit | attribute:maxlength }}
 	{{ autocomplete | attribute:autocomplete }}
-	{{ inputmode | attribute:inputmode }}
+	{{ if autocapitalize && autocapitalize !== 'null' }}{{ autocapitalize | attribute:autocapitalize }}{{ /if }}
+	{{ if autocorrect && autocorrect !== 'null' }}{{ autocorrect | attribute:autocorrect }}{{ /if }}
+	{{ if inputmode && inputmode !== 'null' }}{{ inputmode | attribute:inputmode }}{{ /if }}
 	{{ min | attribute:min }}
 	{{ max | attribute:max }}
 	{{ minlength | attribute:minlength }}

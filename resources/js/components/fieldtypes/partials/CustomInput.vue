@@ -328,6 +328,12 @@ export default {
 			const fromConfig = {};
 			if (this.config?.maxlength != null) fromConfig.maxlength = this.config.maxlength;
 			if (this.config?.autocomplete != null) fromConfig.autocomplete = this.config.autocomplete;
+			// Keys the Control Panel offers and PHP preload passes through (`internal_when_hidden`
+			// in DefinesInputConfigFields.php); a fieldtype that hides one has it stripped from
+			// preload, so it is never set here.
+			['minlength', 'pattern', 'autocapitalize', 'autocorrect', 'inputmode'].forEach((key) => {
+				if (this.config?.[key] != null && this.config[key] !== '') fromConfig[key] = this.config[key];
+			});
 			const raw = this.inputAttrs;
 			const normalized = typeof raw === 'string'
 				? raw.split(' ').filter((a) => a.length > 0).reduce((acc, a) => ({ ...acc, [a]: true }), {})

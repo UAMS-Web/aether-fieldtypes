@@ -10,8 +10,13 @@
 	name="{{ handle }}"
 	value="{{ value | sanitize }}"
 	{{ placeholder | attribute:placeholder }}
-	{{ character_limit | attribute:maxlength }}
+	{{# `character_limit` wins when both it and `maxlength` are set, so the attribute is emitted once. #}}
+	{{ ( character_limit ?? maxlength ) | attribute:maxlength }}
+	{{ minlength | attribute:minlength }}
 	{{ autocomplete | attribute:autocomplete }}
+	{{ if autocapitalize && autocapitalize !== 'null' }}{{ autocapitalize | attribute:autocapitalize }}{{ /if }}
+	{{ if autocorrect && autocorrect !== 'null' }}{{ autocorrect | attribute:autocorrect }}{{ /if }}
+	{{ if inputmode && inputmode !== 'null' }}{{ inputmode | attribute:inputmode }}{{ /if }}
 	{{ if calculation_query == true }}
 		{{# See default.antlers.html for the calculation_* wiring rationale. #}}
 		data-calculation-type="{{ calculation_type ?? 'math' }}"
